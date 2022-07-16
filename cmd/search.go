@@ -5,10 +5,11 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-
 	"fmt"
+
+	"github.com/qascade/yast/core"
+	"github.com/qascade/yast/scraper"
 	"github.com/spf13/cobra"
-	//"github.com/qascade/yast/core"
 )
 
 // searchCmd represents the search command
@@ -21,7 +22,7 @@ and usage of using your command. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
-	Run: Search, 
+	RunE: Search, 
 }
 //Flags for searchCmd
 var MovieName string
@@ -47,25 +48,37 @@ func CheckIfSet(cmd *cobra.Command, args []string) (movieSet, seriesSet, bothSet
 	return
 }
 
-func Search(cmd *cobra.Command, args []string){
+func Search(cmd *cobra.Command, args []string)(error){
 	var err error
 	MovieSet, SeriesSet, BothSet, err = CheckIfSet(cmd, args)
 	if err != nil {
 		fmt.Println(err)
-		return
+		return err
 	}
 	if BothSet {
-		fmt.Println("You can only search for either movie or series at a time")
-		return
+		err = fmt.Errorf("You can only search for either movie or series at a time")
+		return err
 	}
 	if MovieSet {
 		MovieName = cmd.Flag("movie").Value.String()
 		fmt.Println("Searching for movie: ", MovieName)
+		context := scraper.QueryContext{
+			Query: MovieName,
+			Type:  "movie",
+		}
+		Query :=  core.NewSearchQuery(&context)
+		var results []*scraper.Result
+		results, err = Query.Search()
+		if err != nil {
+			return err
+		}
+		fmt.Println(results)
 	}
 	if SeriesSet {
 		SeriesName = cmd.Flag("series").Value.String()
 		fmt.Println("Searching for series: ", SeriesName)
 	}
+	return nil
 }
 	
 

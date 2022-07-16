@@ -1,0 +1,3 @@
+package scraper
+
+func UrlBuilder()
