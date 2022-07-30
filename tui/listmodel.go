@@ -2,15 +2,14 @@ package tui
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
-	
-	"github.com/qascade/yast/scraper"
+
 	"github.com/qascade/yast/movie"
+	"github.com/qascade/yast/scraper"
 )
 
 const (
@@ -22,17 +21,17 @@ var (
 	appStyle = lipgloss.NewStyle().Padding(1, 2)
 
 	titleStyle = lipgloss.NewStyle().
-					Foreground(lipgloss.Color("#FFFDF5")).
-					Background(lipgloss.Color("#25A065")).
-					Padding(0, 1)
+			Foreground(lipgloss.Color("#FFFDF5")).
+			Background(lipgloss.Color("#25A065")).
+			Padding(0, 1)
 
 	statusMessageStyle = lipgloss.NewStyle().
-							Foreground(lipgloss.AdaptiveColor{Light: "#04B575", Dark: "#04B575"}).
-							Render
+				Foreground(lipgloss.AdaptiveColor{Light: "#04B575", Dark: "#04B575"}).
+				Render
 )
 
 type listKeyMap struct {
-	//Do we need a reload/refresh toggle? 
+	//Do we need a reload/refresh toggle?
 
 	toggleSpinner    key.Binding
 	toggleTitleBar   key.Binding
@@ -43,51 +42,52 @@ type listKeyMap struct {
 
 func newListKeyMap() *listKeyMap {
 	return &listKeyMap{
-			toggleTitleBar: key.NewBinding(
-					key.WithKeys("T"),
-					key.WithHelp("T", "toggle title"),
-			),
-			toggleStatusBar: key.NewBinding(
-					key.WithKeys("S"),
-					key.WithHelp("S", "toggle status"),
-			),
-			togglePagination: key.NewBinding(
-					key.WithKeys("P"),
-					key.WithHelp("P", "toggle pagination"),
-			),
-			toggleHelpMenu: key.NewBinding(
-					key.WithKeys("H"),
-					key.WithHelp("H", "toggle help"),
-			),
+		toggleTitleBar: key.NewBinding(
+			key.WithKeys("T"),
+			key.WithHelp("T", "toggle title"),
+		),
+		toggleStatusBar: key.NewBinding(
+			key.WithKeys("S"),
+			key.WithHelp("S", "toggle status"),
+		),
+		togglePagination: key.NewBinding(
+			key.WithKeys("P"),
+			key.WithHelp("P", "toggle pagination"),
+		),
+		toggleHelpMenu: key.NewBinding(
+			key.WithKeys("H"),
+			key.WithHelp("H", "toggle help"),
+		),
 	}
 }
 
 type ListModel struct {
-	list          list.Model
-	items 	   	  []*list.Item
-	keys          *listKeyMap
-	delegateKeys  *delegateKeyMap
+	list         list.Model
+	items        []list.Item
+	keys         *listKeyMap
+	delegateKeys *delegateKeyMap
 }
 
 func NewListModel(title string, results scraper.Results) ListModel {
 	var (
 		//itemGenerator randomItemGenerator
-		delegateKeys  = newDelegateKeyMap()
-		listKeys      = newListKeyMap()
+		delegateKeys = newDelegateKeyMap()
+		listKeys     = newListKeyMap()
 	)
-	// Need for model item list here. 
-	
-	var items []*list.Item	
+	// Need for model item list here.
+
+	var items []list.Item
 	for _, result := range results {
-		if queryItem, ok := result.(movie.Movie); ok {
-			items = append(items, queryItem)
-		}
-		if result.(movie.Movie){
-			fmt.Println(result)	
-		}
+		// if queryItem, ok := result.(movie.Movie); ok {
+		// 	items = append(items, queryItem)
+		// }
+		fmt.Println(result.(movie.Movie))
 	}
 	delegate := newItemDelegate(delegateKeys)
 	queryItemList := list.New(items, delegate, 0, 0)
+	//This will have to be handled differently once series type is added to yast
+	queryItemList.Title = MOVIE_RESULTS_TITLE
+	queryItemList.Styles.Title = titleStyle
 	queryItemList.AdditionalFullHelpKeys = func() []key.Binding {
 		return []key.Binding{
 			listKeys.toggleSpinner,
@@ -100,17 +100,20 @@ func NewListModel(title string, results scraper.Results) ListModel {
 	}
 
 	return ListModel{
-		list:          queryItemList,
-		keys:          listKeys,
-		//items stuff was here as well 
-		items:         items,
-		delegateKeys:  delegateKeys,
+		list:         queryItemList,
+		keys:         listKeys,
+		items:        items,
+		delegateKeys: delegateKeys,
 	}
 
 }
 
 func (m ListModel) Init() tea.Cmd {
 	return tea.EnterAltScreen
+}
+
+func (m ListModel) View() string {
+	return appStyle.Render(m.list.View())
 }
 func (m ListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmds []tea.Cmd
@@ -149,9 +152,9 @@ func (m ListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case key.Matches(msg, m.keys.toggleHelpMenu):
 			m.list.SetShowHelp(!m.list.ShowHelp())
 			return m, nil
+		}
 	}
 
-	// This will also call our delegate's update function.
 	newListModel, cmd := m.list.Update(msg)
 	m.list = newListModel
 	cmds = append(cmds, cmd)
@@ -159,21 +162,16 @@ func (m ListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, tea.Batch(cmds...)
 }
 
-func (m ListModel) View() string { 
-	return appStyle.Render(m.list.View())
-}
-
 //Also need to pass Results struct here for rendering.
-func RenderListModelView(title string, results scraper.Results) string {
+func RenderListModelView(title string, results scraper.Results) (err error) {
 	if err := tea.NewProgram(NewListModel(title, results)).Start(); err != nil {
-			fmt.Errorf("error: not able to render list model")
-			os.Exit(1)
+		err = fmt.Errorf("error: not able to render list model")
+		return err
 	}
+	return nil
 }
 
-
-
-//Delegate Key Map Functions ------------------//
+//--------------Deletegate Key Map-------------------
 
 func newItemDelegate(keys *delegateKeyMap) list.DefaultDelegate {
 	d := list.NewDefaultDelegate()
@@ -181,8 +179,8 @@ func newItemDelegate(keys *delegateKeyMap) list.DefaultDelegate {
 	d.UpdateFunc = func(msg tea.Msg, m *list.Model) tea.Cmd {
 		var title string
 
-		if i, ok := m.SelectedItem().(item); ok {
-			title = i.Title()
+		if i, ok := m.SelectedItem().(movie.Movie); ok {
+			title = i.Name
 		} else {
 			return nil
 		}
@@ -190,17 +188,17 @@ func newItemDelegate(keys *delegateKeyMap) list.DefaultDelegate {
 		switch msg := msg.(type) {
 		case tea.KeyMsg:
 			switch {
-			//This will call the View of ResultModel for the chosen queryItem
+			//This case will be used to call ResultModel View for the selected result
+			//For now just printing the Title
 			case key.Matches(msg, keys.choose):
 				return m.NewStatusMessage(statusMessageStyle("You chose " + title))
-
 			}
 		}
 
 		return nil
 	}
 
-	help := []key.Binding{keys.choose,}
+	help := []key.Binding{keys.choose}
 
 	d.ShortHelpFunc = func() []key.Binding {
 		return help

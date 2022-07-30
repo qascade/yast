@@ -2,6 +2,8 @@ package movie
 
 import (
 	"time"
+
+	"github.com/qascade/yast/utils"
 )
 
 type Movie struct {
@@ -22,4 +24,9 @@ func NewMovie(name string, uploaded time.Time, magnet string, size string, seeds
 		Seeds:    seeds,
 		Uploader: uploader,
 	}, nil
+}
+
+func (m Movie) FilterValue() string {
+	utils.LogUnimplementedFunc()
+	return ""
 }

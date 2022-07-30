@@ -4,4 +4,4 @@ package scraper
 type Result interface {
 }
 
-type Results []*Result
+type Results []Result
