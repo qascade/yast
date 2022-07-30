@@ -22,24 +22,26 @@ and usage of using your command. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
-	RunE: Search, 
+	RunE: Search,
 }
+
 //Flags for searchCmd
 var MovieName string
 var SeriesName string
 var MovieSet bool
 var SeriesSet bool
+
 // For now we will only search for either movie or series one at a time. If both flags set throw error
 var BothSet bool
 
-func CheckIfSet(cmd *cobra.Command, args []string) (movieSet, seriesSet, bothSet bool, err error){
+func CheckIfSet(cmd *cobra.Command, args []string) (movieSet, seriesSet, bothSet bool, err error) {
 	if cmd.Flag("movie").Changed {
 		movieSet = true
 	}
 	if cmd.Flag("series").Changed {
 		seriesSet = true
 	}
-	if cmd.Flag("movie").Changed  && cmd.Flag("series").Changed {
+	if cmd.Flag("movie").Changed && cmd.Flag("series").Changed {
 		bothSet = true
 	}
 	if !movieSet && !seriesSet {
@@ -48,7 +50,7 @@ func CheckIfSet(cmd *cobra.Command, args []string) (movieSet, seriesSet, bothSet
 	return
 }
 
-func Search(cmd *cobra.Command, args []string)(error){
+func Search(cmd *cobra.Command, args []string) error {
 	var err error
 	MovieSet, SeriesSet, BothSet, err = CheckIfSet(cmd, args)
 	if err != nil {
@@ -62,16 +64,13 @@ func Search(cmd *cobra.Command, args []string)(error){
 	if MovieSet {
 		MovieName = cmd.Flag("movie").Value.String()
 		fmt.Println("Searching for movie: ", MovieName)
-		context := scraper.QueryContext{
-			Query: MovieName,
-			Type:  "movie",
-		}
-		Query :=  core.NewSearchQuery(&context)
+		context := scraper.NewQueryContext("movie", MovieName)
+		Query := core.NewSearchQuery(context)
 		var results []*scraper.Result
-		results, err = Query.Search()
 		if err != nil {
 			return err
 		}
+		Query.Search()
 		fmt.Println(results)
 	}
 	if SeriesSet {
@@ -80,15 +79,14 @@ func Search(cmd *cobra.Command, args []string)(error){
 	}
 	return nil
 }
-	
 
 // func SearchMovie(movieName string, targetSite url) (error){
-	
+
 // }
 
 func init() {
 	yastCmd.AddCommand(searchCmd)
-	
+
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command

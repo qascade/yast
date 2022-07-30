@@ -1,3 +1,1 @@
 package scraper
-
-func UrlBuilder()
