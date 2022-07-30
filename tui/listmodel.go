@@ -82,7 +82,9 @@ func NewListModel(title string, results scraper.Results) ListModel {
 		if queryItem, ok := result.(movie.Movie); ok {
 			items = append(items, queryItem)
 		}
-		if result.(movie.Movie)
+		if result.(movie.Movie){
+			fmt.Println(result)	
+		}
 	}
 	delegate := newItemDelegate(delegateKeys)
 	queryItemList := list.New(items, delegate, 0, 0)
@@ -147,14 +149,6 @@ func (m ListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case key.Matches(msg, m.keys.toggleHelpMenu):
 			m.list.SetShowHelp(!m.list.ShowHelp())
 			return m, nil
-
-		// case key.Matches(msg, m.keys.insertItem):
-		// 	m.delegateKeys.remove.SetEnabled(true)
-		// 	newItem := m.itemGenerator.next()
-		// 	insCmd := m.list.InsertItem(0, newItem)
-		// 	statusCmd := m.list.NewStatusMessage(statusMessageStyle("Added " + newItem.Title()))
-		// 	return m, tea.Batch(insCmd, statusCmd)
-		// }
 	}
 
 	// This will also call our delegate's update function.
@@ -165,7 +159,7 @@ func (m ListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, tea.Batch(cmds...)
 }
 
-func (m ListModel) View() string{
+func (m ListModel) View() string { 
 	return appStyle.Render(m.list.View())
 }
 
