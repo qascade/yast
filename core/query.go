@@ -11,7 +11,7 @@ type Query interface {
 }
 
 type SearchQuery struct{
-	Searched bool //To check whether the query has been searched or not
+	searched bool //To check whether the query has been searched or not
 	Results []*scraper.Result
 	Context *scraper.QueryContext
 }
@@ -19,7 +19,7 @@ type SearchQuery struct{
 
 func NewSearchQuery(context *scraper.QueryContext) *SearchQuery{
 	return &SearchQuery{
-		Searched: false,
+		searched: false,
 		Context: context,
 	}
 }
@@ -30,11 +30,11 @@ func (q *SearchQuery) Search() (results []*scraper.Result, err error){
 		return nil, err
 	}
 	q.Results = results
-	q.Searched = true
+	q.searched = true
 	return	
 }
 func (q *SearchQuery) GetResults() (results []*scraper.Result, err error){
-	if !q.Searched {
+	if !q.searched {
 		err = fmt.Errorf("Query has not been searched yet")
 		return
 	}

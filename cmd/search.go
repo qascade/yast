@@ -62,14 +62,13 @@ func Search(cmd *cobra.Command, args []string)(error){
 	if MovieSet {
 		MovieName = cmd.Flag("movie").Value.String()
 		fmt.Println("Searching for movie: ", MovieName)
-			Query: MovieName,
-			Type:  "movie",
-		}
-		Query :=  core.NewSearchQuery(&context)
+		context := scraper.NewQueryContext("movie", MovieName)
+		Query :=  core.NewSearchQuery(context)
 		var results []*scraper.Result
 		if err != nil {
 			return err
 		}
+		Query.Search()
 		fmt.Println(results)
 	}
 	if SeriesSet {
