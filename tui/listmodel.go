@@ -31,8 +31,6 @@ var (
 )
 
 type listKeyMap struct {
-	//Do we need a reload/refresh toggle?
-
 	toggleSpinner    key.Binding
 	toggleTitleBar   key.Binding
 	toggleStatusBar  key.Binding
@@ -70,7 +68,6 @@ type ListModel struct {
 
 func NewListModel(title string, results scraper.Results) ListModel {
 	var (
-		//itemGenerator randomItemGenerator
 		delegateKeys = newDelegateKeyMap()
 		listKeys     = newListKeyMap()
 	)
@@ -78,10 +75,9 @@ func NewListModel(title string, results scraper.Results) ListModel {
 
 	var items []list.Item
 	for _, result := range results {
-		// if queryItem, ok := result.(movie.Movie); ok {
-		// 	items = append(items, queryItem)
-		// }
-		fmt.Println(result.(movie.Movie))
+		if queryItem, ok := result.(movie.Movie); ok {
+			items = append(items, queryItem)
+		}
 	}
 	delegate := newItemDelegate(delegateKeys)
 	queryItemList := list.New(items, delegate, 0, 0)
@@ -162,6 +158,7 @@ func (m ListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, tea.Batch(cmds...)
 }
 
+//This method is used to render ListModel View once query results are aquired by the scrper.
 //Also need to pass Results struct here for rendering.
 func RenderListModelView(title string, results scraper.Results) (err error) {
 	if err := tea.NewProgram(NewListModel(title, results)).Start(); err != nil {
@@ -171,14 +168,13 @@ func RenderListModelView(title string, results scraper.Results) (err error) {
 	return nil
 }
 
-//--------------Deletegate Key Map-------------------
+//--------------Deletegate Key Map-------------------//
 
 func newItemDelegate(keys *delegateKeyMap) list.DefaultDelegate {
 	d := list.NewDefaultDelegate()
 
 	d.UpdateFunc = func(msg tea.Msg, m *list.Model) tea.Cmd {
 		var title string
-
 		if i, ok := m.SelectedItem().(movie.Movie); ok {
 			title = i.Name
 		} else {
