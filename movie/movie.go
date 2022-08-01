@@ -1,6 +1,7 @@
 package movie
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/qascade/yast/utils"
@@ -41,5 +42,6 @@ func (m Movie) Title() string {
 
 //TODO: Modify this to show Metadata for the result item
 func (m Movie) Description() string {
-	return "This is a movie stub"
+	var metadata = fmt.Sprintf("Uploaded: %s || Size: %s || Seeds: %d", m.Uploaded.Format("2006-01-02"), m.Size, m.Seeds)
+	return metadata
 }
