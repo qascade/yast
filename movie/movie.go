@@ -1,7 +1,10 @@
 package movie
 
 import (
+	"fmt"
 	"time"
+
+	"github.com/qascade/yast/utils"
 )
 
 type Movie struct {
@@ -22,4 +25,23 @@ func NewMovie(name string, uploaded time.Time, magnet string, size string, seeds
 		Seeds:    seeds,
 		Uploader: uploader,
 	}, nil
+}
+
+func (m Movie) FilterValue() string {
+	utils.LogUnimplementedFunc()
+	return ""
+}
+
+// Title() and Description() are a part of the bubbles.list.Item interface.
+//Need these methods to render list item in the listmodel view.
+// Removing these functions will cause the listmodel view to not render properly.
+
+func (m Movie) Title() string {
+	return m.Name
+}
+
+//TODO: Modify this to show Metadata for the result item
+func (m Movie) Description() string {
+	var metadata = fmt.Sprintf("Uploaded: %s || Size: %s || Seeds: %d", m.Uploaded.Format("2006-01-02"), m.Size, m.Seeds)
+	return metadata
 }
