@@ -6,8 +6,12 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
+
+	"github.com/qascade/yast/utils"
+	"github.com/qascade/yast/core"
 )
 
 // configCmd represents the config command
@@ -25,6 +29,30 @@ to quickly create a Cobra application.`,
 	},
 }
 
+func CallSetup(cmd *cobra.Command, args []string) error {
+	err := SetupYast()
+	if err != nil {
+		return fmt.Errorf("err %s: could not setup yast", err)
+	}
+	return nil
+}
+func SetupYast() error {
+	err := utils.CreateYastWorkDir()
+	if err != nil {
+		return fmt.Errorf("err %s: could not create default yast work dir %s", err, utils.YastWorkDir)
+	}
+	var configFile *os.File
+	configFile, err = utils.CreateConfigJSON()
+	if err != nil {
+		return fmt.Errorf("err %s: could not create config.json", err) 
+	}
+	err = core.FillConfigJSON(configFile)
+	if err != nil {
+		return fmt.Errorf("err %s: could not fill config.json", err)
+	}
+	
+	return nil
+}
 func init() {
 	yastCmd.AddCommand(configCmd)
 
