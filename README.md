@@ -14,8 +14,7 @@ First, [download](https://golang.org/dl/) and install **Go**. Version `1.18` or 
 ## NOTE
 
 Project still in development stage. Will be available to stream movies by end of August. In the meanwhile, you can look at these design docs on how we are planning to build this tool.
-Contributions and suggestions are always welcome. Please read [Contributions.md]() for more details. 
-
+Contributions and suggestions are always welcome. 
 ## Design Docs 
 
 [**Structure Design**](https://docs.google.com/document/d/1UHGnfGrgGyRTDN-Pku7QamPtbvk5Bin9dBn7n1JDMv8/edit?usp=sharing)
