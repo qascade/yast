@@ -46,11 +46,12 @@ func SetupYast() error {
 	if err != nil {
 		return fmt.Errorf("err %s: could not create config.json", err) 
 	}
-	err = core.FillConfigJSON(configFile)
+	var configBS core.ConfigBuildSpec
+	utils.TraceMsg("TODO-Fill Config BS using tui-SetupModel")
+	err = core.FillConfigJSON(configFile, &configBS)
 	if err != nil {
 		return fmt.Errorf("err %s: could not fill config.json", err)
 	}
-	
 	return nil
 }
 func init() {
