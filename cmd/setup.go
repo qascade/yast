@@ -5,7 +5,6 @@ Copyright © 2022 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-
 	"github.com/spf13/cobra"
 )
 
@@ -13,7 +12,7 @@ import (
 var setupCmd = &cobra.Command{
 	Use:   "setup",
 	Short: "setup yast for first-time users",
-	RunE: CallSetup, 
+	RunE:  CallSetup,
 }
 
 func init() {

@@ -1,11 +1,11 @@
-package utils 
+package utils
 
-import(
+import (
 	"os"
 )
 
 var (
-	YastWorkDir         string
+	YastWorkDir       string
 	DefaultConfigPath string
 )
 

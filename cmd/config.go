@@ -10,8 +10,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/qascade/yast/utils"
 	"github.com/qascade/yast/core"
+	"github.com/qascade/yast/utils"
 )
 
 // configCmd represents the config command
@@ -44,7 +44,7 @@ func SetupYast() error {
 	var configFile *os.File
 	configFile, err = utils.CreateConfigJSON()
 	if err != nil {
-		return fmt.Errorf("err %s: could not create config.json", err) 
+		return fmt.Errorf("err %s: could not create config.json", err)
 	}
 	var configBS core.ConfigBuildSpec
 	utils.TraceMsg("TODO-Fill Config BS using tui-SetupModel")

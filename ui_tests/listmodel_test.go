@@ -2,7 +2,7 @@ package ui_tests
 
 import (
 	"fmt"
-	"sync"
+	//"sync"
 	"testing"
 	"time"
 
@@ -26,18 +26,20 @@ func TestListModel(t *testing.T) {
 		resultsStub = append(resultsStub, queryItem1)
 	}
 	//Used a wait group to force the test to stop at the rendering go routine to see how the view is rendered.
-	wg := sync.WaitGroup{}
-	wg.Add(1)
-	errc := make(chan error)
-	go func() {
-		err := tui.RenderListModelView("movie", resultsStub)
-		errc <- err
-		wg.Done()
-	}()
-	err := <-errc
+	//WaitGroup is not to be pushed on github as will it will fail the test CI Workflow.
+	//Uncomment the waitgroup code if you want to see the view rendered.
+	//wg := sync.WaitGroup{}
+	// wg.Add(1)
+	// errc := make(chan error)
+	// go func() {
+	err := tui.RenderListModelView("movie", resultsStub)
+	//errc <- err
+	//wg.Done()
+	//}()
+	//err := <-errc
 	if err != nil {
 		t.Error(err)
 	}
-	wg.Wait()
+	//wg.Wait()
 
 }

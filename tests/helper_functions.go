@@ -16,7 +16,7 @@ var (
 )
 
 func init() {
-	currDirPath, err := os.Getwd()	
+	currDirPath, err := os.Getwd()
 	if err != nil {
 		panic(err)
 	}
@@ -39,7 +39,7 @@ func setupYastEnv() (configFile *os.File, err error) {
 func getFileHash(f string) (hashVal string, err error) {
 	file, err := os.Open(f)
 	if err != nil {
-			return hashVal, fmt.Errorf("opening file %s:%w", f, err)
+		return hashVal, fmt.Errorf("opening file %s:%w", f, err)
 	}
 
 	defer file.Close()
@@ -48,7 +48,7 @@ func getFileHash(f string) (hashVal string, err error) {
 	_, err = io.Copy(hash, file)
 
 	if err != nil {
-			return hashVal, fmt.Errorf("calculating hash of %s:%w", f, err)
+		return hashVal, fmt.Errorf("calculating hash of %s:%w", f, err)
 	}
 
 	return fmt.Sprintf("%x", hash.Sum(nil)), nil
