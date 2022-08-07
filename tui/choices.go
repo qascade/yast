@@ -14,4 +14,3 @@ var TargetChoice string
 func GetPlayerChoice() string {
 	return PlayerChoice
 }
-

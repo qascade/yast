@@ -1,8 +1,8 @@
 /*
 Copyright © 2022 Shubh Karman Singh <sksingh2211@gmail.com>
-All rights reserved. 
-This Project is under BSD-3 License Clause. 
-Look at License for more detail. 
+All rights reserved.
+This Project is under BSD-3 License Clause.
+Look at License for more detail.
 */
 package cmd
 
@@ -18,8 +18,8 @@ import (
 var configCmd = &cobra.Command{
 	Use:   "config",
 	Short: "Used to change already set user preferences or reset the user preferences to default",
-	Long: `YAST is a TUI utility that will let you stream your favorite movies/tv-series in one command.`,
-	RunE: CallUpdateConfig, 
+	Long:  `YAST is a TUI utility that will let you stream your favorite movies/tv-series in one command.`,
+	RunE:  CallUpdateConfig,
 }
 
 func CallSetup(cmd *cobra.Command, args []string) error {
@@ -46,12 +46,12 @@ func CheckIfConfigFlagSet(cmd *cobra.Command, args []string) (bool, bool, bool) 
 func CallUpdateConfig(cmd *cobra.Command, args []string) error {
 	var err error
 	playerChangeFlagSet, targetChangeFlagSet, resetFlagSet := CheckIfConfigFlagSet(cmd, args)
-	err = config.UpdateConfigJSON(playerChangeFlagSet,targetChangeFlagSet, resetFlagSet)
+	err = config.UpdateConfigJSON(playerChangeFlagSet, targetChangeFlagSet, resetFlagSet)
 	if err != nil {
 		return fmt.Errorf("err %s: could not update config", err)
 	}
 	return err
-}	
+}
 
 func init() {
 	yastCmd.AddCommand(configCmd)

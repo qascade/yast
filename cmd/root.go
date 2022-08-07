@@ -1,8 +1,8 @@
 /*
 Copyright © 2022 Shubh Karman Singh <sksingh2211@gmail.com>
-All rights reserved. 
-This Project is under BSD-3 License Clause. 
-Look at License for more detail. 
+All rights reserved.
+This Project is under BSD-3 License Clause.
+Look at License for more detail.
 */
 package cmd
 
@@ -17,7 +17,7 @@ import (
 var yastCmd = &cobra.Command{
 	Use:   "yast",
 	Short: "Yet Another Streaming Tool",
-	Long: `YAST is a TUI utility that will let you stream your favorite movies/tv-series in one command.`,
+	Long:  `YAST is a TUI utility that will let you stream your favorite movies/tv-series in one command.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },

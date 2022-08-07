@@ -9,13 +9,13 @@ package config
 import (
 	"encoding/json"
 	"fmt"
-	"os"
 	"github.com/qascade/yast/tui"
 	"github.com/qascade/yast/utils"
+	"os"
 	//"github.com/tidwall/sjson"
 )
 
-var PlayerChoiceFromTui string 
+var PlayerChoiceFromTui string
 var ConfigJsonExists bool
 
 //This function will call interactive tui for taking input of user preferences.
@@ -60,7 +60,7 @@ func UpdateConfigJSON(playerChange bool, targetChange bool, reset bool) error {
 		return nil
 	}
 	if playerChange {
-		//Doing Code duplication here, Should Keep it same as it won't remain same once target-preference is added. 
+		//Doing Code duplication here, Should Keep it same as it won't remain same once target-preference is added.
 		err := RemoveConfigJSON()
 		if err != nil {
 			return fmt.Errorf("err %s: could not remove config.json", err)
@@ -77,7 +77,7 @@ func UpdateConfigJSON(playerChange bool, targetChange bool, reset bool) error {
 			return err
 		}
 		err = FillConfigJSON(configFile, &configBS)
-		if err != nil { 
+		if err != nil {
 			return err
 		}
 		return nil

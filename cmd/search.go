@@ -1,8 +1,8 @@
 /*
 Copyright © 2022 Shubh Karman Singh <sksingh2211@gmail.com>
-All rights reserved. 
-This Project is under BSD-3 License Clause. 
-Look at License for more detail. 
+All rights reserved.
+This Project is under BSD-3 License Clause.
+Look at License for more detail.
 */
 package cmd
 
@@ -28,11 +28,11 @@ to quickly create a Cobra application.`,
 }
 
 //Flags for searchCmd
-var(
-	MovieName string
+var (
+	MovieName  string
 	SeriesName string
- 	movieSet bool
-	seriesSet bool
+	movieSet   bool
+	seriesSet  bool
 )
 
 // For now we will only search for either movie or series one at a time. If both flags set throw error
@@ -79,7 +79,7 @@ func Search(cmd *cobra.Command, args []string) error {
 	}
 	if seriesSet {
 		SeriesName = cmd.Flag("series").Value.String()
-		fmt.Println("Searching for Series yet to be implemented...") 
+		fmt.Println("Searching for Series yet to be implemented...")
 	}
 	return nil
 }

@@ -11,7 +11,6 @@ import (
 	"os"
 )
 
-
 func SetupYast() error {
 	err := CreateYastWorkDir()
 	if err != nil {
@@ -31,4 +30,3 @@ func SetupYast() error {
 	return nil
 
 }
-
