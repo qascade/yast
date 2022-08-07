@@ -1,13 +1,15 @@
 /*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
+Copyright © 2022 Shubh Karman Singh <sksingh2211@gmail.com>
+All rights reserved. 
+This Project is under BSD-3 License Clause. 
+Look at License for more detail. 
 */
 package cmd
 
 import (
 	"fmt"
 
-	"github.com/qascade/yast/core"
+	"github.com/qascade/yast/query"
 	"github.com/qascade/yast/scraper"
 	"github.com/spf13/cobra"
 )
@@ -26,15 +28,17 @@ to quickly create a Cobra application.`,
 }
 
 //Flags for searchCmd
-var MovieName string
-var SeriesName string
-var MovieSet bool
-var SeriesSet bool
+var(
+	MovieName string
+	SeriesName string
+ 	movieSet bool
+	seriesSet bool
+)
 
 // For now we will only search for either movie or series one at a time. If both flags set throw error
-var BothSet bool
+var bothSet bool
 
-func CheckIfSet(cmd *cobra.Command, args []string) (movieSet, seriesSet, bothSet bool, err error) {
+func CheckIfSearchFlagsSet(cmd *cobra.Command, args []string) (movieSet, seriesSet, bothSet bool, err error) {
 	if cmd.Flag("movie").Changed {
 		movieSet = true
 	}
@@ -52,16 +56,16 @@ func CheckIfSet(cmd *cobra.Command, args []string) (movieSet, seriesSet, bothSet
 
 func Search(cmd *cobra.Command, args []string) error {
 	var err error
-	MovieSet, SeriesSet, BothSet, err = CheckIfSet(cmd, args)
+	movieSet, seriesSet, bothSet, err = CheckIfSearchFlagsSet(cmd, args)
 	if err != nil {
 		fmt.Println(err)
 		return err
 	}
-	if BothSet {
+	if bothSet {
 		err = fmt.Errorf("You can only search for either movie or series at a time")
 		return err
 	}
-	if MovieSet {
+	if movieSet {
 		MovieName = cmd.Flag("movie").Value.String()
 		fmt.Println("Searching for movie: ", MovieName)
 		context := scraper.NewQueryContext("movie", MovieName)
@@ -73,9 +77,9 @@ func Search(cmd *cobra.Command, args []string) error {
 		Query.Search()
 		fmt.Println(results)
 	}
-	if SeriesSet {
+	if seriesSet {
 		SeriesName = cmd.Flag("series").Value.String()
-		fmt.Println("Searching for series: ", SeriesName)
+		fmt.Println("Searching for Series yet to be implemented...") 
 	}
 	return nil
 }

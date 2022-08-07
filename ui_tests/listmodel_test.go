@@ -3,7 +3,6 @@ package ui_tests
 import (
 	"fmt"
 	//"sync"
-	"testing"
 	"time"
 
 	"github.com/qascade/yast/movie"
@@ -11,7 +10,7 @@ import (
 	"github.com/qascade/yast/tui"
 )
 
-func TestListModel(t *testing.T) {
+func UITestListModel() error {
 	fmt.Println("Running TestListModel")
 	var resultsStub scraper.Results
 	queryItem1 := movie.Movie{
@@ -38,8 +37,8 @@ func TestListModel(t *testing.T) {
 	//}()
 	//err := <-errc
 	if err != nil {
-		t.Error(err)
+		return err
 	}
 	//wg.Wait()
-
+	return nil
 }

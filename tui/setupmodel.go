@@ -1,13 +1,15 @@
+/*
+Copyright © 2022 Shubh Karman Singh <sksingh2211@gmail.com>
+All rights reserved. 
+This Project is under BSD-3 License Clause. 
+Look at License for more detail. 
+*/
 package tui
 
 import (
 	"fmt"
 
-	//"github.com/fogleman/ease"
-
 	tea "github.com/charmbracelet/bubbletea"
-	"github.com/qascade/yast/core"
-	//"github.com/lucasb-eyer/go-colorful"
 	"github.com/muesli/reflow/indent"
 	"github.com/muesli/termenv"
 )
@@ -64,10 +66,10 @@ func chosenView(m SetupModel) string {
 	switch m.Choice {
 	case 0:
 		msg = "You Chose WebTorrent Player. Happy Streaming 🙂"
-		core.PlayerChoice = "web-torrent"
+		PlayerChoice = "web-torrent"
 	case 1:
 		msg = "You Chose VLC. Happy Streaming 🙂"
-		core.PlayerChoice = "vlc"
+		PlayerChoice = "vlc"
 	}
 	m.Quitting = true
 	return msg + "\n\n"

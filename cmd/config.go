@@ -1,59 +1,58 @@
 /*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
+Copyright © 2022 Shubh Karman Singh <sksingh2211@gmail.com>
+All rights reserved. 
+This Project is under BSD-3 License Clause. 
+Look at License for more detail. 
 */
 package cmd
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/spf13/cobra"
 
-	"github.com/qascade/yast/core"
-	"github.com/qascade/yast/utils"
+	"github.com/qascade/yast/config"
 )
 
 // configCmd represents the config command
 var configCmd = &cobra.Command{
 	Use:   "config",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("config called")
-	},
+	Short: "Used to change already set user preferences or reset the user preferences to default",
+	Long: `YAST is a TUI utility that will let you stream your favorite movies/tv-series in one command.`,
+	RunE: CallUpdateConfig, 
 }
 
 func CallSetup(cmd *cobra.Command, args []string) error {
-	err := SetupYast()
+	err := config.SetupYast()
 	if err != nil {
 		return fmt.Errorf("err %s: could not setup yast", err)
 	}
 	return nil
 }
-func SetupYast() error {
-	err := utils.CreateYastWorkDir()
-	if err != nil {
-		return fmt.Errorf("err %s: could not create default yast work dir %s", err, utils.YastWorkDir)
+
+func CheckIfConfigFlagSet(cmd *cobra.Command, args []string) (bool, bool, bool) {
+	if cmd.Flag("reset").Changed {
+		return false, false, true
 	}
-	var configFile *os.File
-	configFile, err = utils.CreateConfigJSON()
-	if err != nil {
-		return fmt.Errorf("err %s: could not create config.json", err)
+	if cmd.Flag("player").Changed {
+		return true, false, false
 	}
-	var configBS core.ConfigBuildSpec
-	utils.TraceMsg("TODO-Fill Config BS using tui-SetupModel")
-	err = core.FillConfigJSON(configFile, &configBS)
-	if err != nil {
-		return fmt.Errorf("err %s: could not fill config.json", err)
+	if cmd.Flag("target").Changed {
+		return false, true, false
 	}
-	return nil
+	return false, false, false
 }
+
+func CallUpdateConfig(cmd *cobra.Command, args []string) error {
+	var err error
+	playerChangeFlagSet, targetChangeFlagSet, resetFlagSet := CheckIfConfigFlagSet(cmd, args)
+	err = config.UpdateConfigJSON(playerChangeFlagSet,targetChangeFlagSet, resetFlagSet)
+	if err != nil {
+		return fmt.Errorf("err %s: could not update config", err)
+	}
+	return err
+}	
+
 func init() {
 	yastCmd.AddCommand(configCmd)
 
@@ -62,7 +61,8 @@ func init() {
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
 	// configCmd.PersistentFlags().String("foo", "", "A help for foo")
-
+	configCmd.Flags().StringVar(&config.PlayerChoiceFromTui, "player", "", "Player to use for streaming")
+	configCmd.Flags().Bool("reset", false, "Reset the user preferences")
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// configCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")

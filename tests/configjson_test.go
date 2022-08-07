@@ -4,8 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/qascade/yast/core"
-	"github.com/qascade/yast/utils"
+	"github.com/qascade/yast/config"
 	"github.com/stretchr/testify/require"
 )
 
@@ -18,13 +17,13 @@ func TestConfigJson(t *testing.T) {
 	}
 
 	//Stub for ConfigBuildSpec
-	var testConfigBS = core.ConfigBuildSpec{
+	var testConfigBS = config.ConfigBuildSpec{
 		Player:           "vlc",
 		TargetPreference: "piratebay",
 		QueryHistory:     true,
 	}
 
-	err = core.FillConfigJSON(testConfigFile, &testConfigBS)
+	err = config.FillConfigJSON(testConfigFile, &testConfigBS)
 	require.NoError(t, err, fmt.Sprintf("error filling config file: %s", err))
-	assertFilesMatch(t, utils.DefaultConfigPath, TestConfigJsonPath)
+	assertFilesMatch(t, config.DefaultConfigPath, TestConfigJsonPath)
 }

@@ -7,7 +7,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/qascade/yast/utils"
+	"github.com/qascade/yast/config"
 	"github.com/stretchr/testify/require"
 )
 
@@ -24,11 +24,11 @@ func init() {
 }
 
 func setupYastEnv() (configFile *os.File, err error) {
-	err = utils.CreateYastWorkDir()
+	err = config.CreateYastWorkDir()
 	if err != nil {
 		return nil, fmt.Errorf("error setting up Yast environment: %v", err)
 	}
-	configFile, err = utils.CreateConfigJSON()
+	configFile, err = config.CreateConfigJSON()
 	if err != nil {
 		return nil, fmt.Errorf("error setting up Yast environment: %v", err)
 	}
