@@ -1,39 +1,61 @@
 /*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
-
+Copyright © 2022 Shubh Karman Singh <sksingh2211@gmail.com>
+All rights reserved.
+This Project is under BSD-3 License Clause.
+Look at License for more detail.
 */
 package cmd
 
 import (
 	"fmt"
-
 	"github.com/spf13/cobra"
+
+	"github.com/qascade/yast/config"
 )
 
 // configCmd represents the config command
-var configCmd = &cobra.Command{
+var ConfigCmd = &cobra.Command{
 	Use:   "config",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "Used to change already set user preferences or reset the user preferences to default",
+	Long:  `YAST is a TUI utility that will let you stream your favorite movies/tv-series in one command.`,
+	RunE:  CallUpdateConfig,
+}
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("config called")
-	},
+func CheckIfConfigFlagSet(cmd *cobra.Command) (bool, bool, bool) {
+	if cmd.Flag("reset").Changed {
+		return false, false, true
+	}
+	if cmd.Flag("player").Changed {
+		return true, false, false
+	}
+	if cmd.Flag("target").Changed {
+		return false, true, false
+	}
+	cmd.Help()
+	return false, false, false
+}
+
+func CallUpdateConfig(cmd *cobra.Command, args []string) error {
+	var err error
+	playerChangeFlagSet, targetChangeFlagSet, resetFlagSet := CheckIfConfigFlagSet(cmd)
+	err = config.UpdateConfigJSON(playerChangeFlagSet, targetChangeFlagSet, resetFlagSet)
+	if err != nil {
+		return fmt.Errorf("err %s: could not update config", err)
+	}
+	return err
 }
 
 func init() {
-	yastCmd.AddCommand(configCmd)
+	yastCmd.AddCommand(ConfigCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
 	// configCmd.PersistentFlags().String("foo", "", "A help for foo")
-
+	ConfigCmd.Flags().Bool("player", true, "Change Default Player to use for streaming")
+	ConfigCmd.Flags().Bool("reset", true, "Reset the user preferences")
+	ConfigCmd.Flags().Bool("target", true, "Change Default Target for searching movies/tv-series")
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// configCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
