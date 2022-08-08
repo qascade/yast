@@ -41,7 +41,6 @@ func (m SetupModel) View() string {
 		s = choicesView(m)
 	} else {
 		s = chosenView(m)
-		m.Quitting = true
 	}
 	return indent.String("\n"+s+"\n\n", 2)
 }
@@ -72,7 +71,7 @@ func chosenView(m SetupModel) string {
 		PlayerChoice = "vlc"
 	}
 	m.Quitting = true
-	return msg + "\n\n"
+	return msg + "\n\nPress q to Quit."
 }
 func checkbox(label string, checked bool) string {
 	if checked {
@@ -152,12 +151,4 @@ func colorFg(val, color string) string {
 // Return a function that will colorize the foreground of a given string.
 func makeFgStyle(color string) func(string) string {
 	return termenv.Style{}.Foreground(term.Color(color)).Styled
-}
-
-// Color a string's foreground and background with the given value.
-func makeFgBgStyle(fg, bg string) func(string) string {
-	return termenv.Style{}.
-		Foreground(term.Color(fg)).
-		Background(term.Color(bg)).
-		Styled
 }

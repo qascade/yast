@@ -72,6 +72,7 @@ type ListModel struct {
 	delegateKeys *delegateKeyMap
 }
 
+//title argument will be used later once tv-series is implemented.
 func NewListModel(title string, results scraper.Results) ListModel {
 	var (
 		delegateKeys = newDelegateKeyMap()

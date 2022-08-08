@@ -15,20 +15,6 @@ import (
 	//"github.com/tidwall/sjson"
 )
 
-var PlayerChoiceFromTui string
-var ConfigJsonExists bool
-
-//This function will call interactive tui for taking input of user preferences.
-type ConfigBuildSpec struct {
-	Player           string `json:"player"`
-	TargetPreference string `json:"target-preference"`
-	QueryHistory     bool   `json:"query-history"`
-}
-
-func NewConfigBuildSpec() *ConfigBuildSpec {
-	return &ConfigBuildSpec{}
-}
-
 func FillConfigJSON(configFile *os.File, configBS *ConfigBuildSpec) error {
 	ConfigJsonExists = true
 	encoder := json.NewEncoder(configFile)
