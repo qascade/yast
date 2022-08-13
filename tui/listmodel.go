@@ -181,10 +181,10 @@ func newItemDelegate(keys *delegateKeyMap) list.DefaultDelegate {
 	d := list.NewDefaultDelegate()
 
 	d.UpdateFunc = func(msg tea.Msg, m *list.Model) tea.Cmd {
-		var title string
+		//var title string
 		var magnet string
 		if i, ok := m.SelectedItem().(movie.Movie); ok {
-			title = i.Name
+			//title = i.Name
 			magnet = i.Magnet
 		} else {
 			return nil
@@ -197,6 +197,8 @@ func newItemDelegate(keys *delegateKeyMap) list.DefaultDelegate {
 			//For now just printing the Title
 			case key.Matches(msg, keys.choose):
 				//webtorrent api call
+				SetMagnetChoice(magnet)
+				StartStream()
 				//return m.NewStatusMessage(statusMessageStyle("You chose " + title))
 			}
 		}

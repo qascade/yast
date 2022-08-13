@@ -99,8 +99,7 @@ func GetDefaultTarget() (string, error) {
 		return "", err
 	}
 	configBS := ConfigBuildSpec{}
-	decoder := json.NewDecoder(configFile)
-	err = decoder.Decode(&configBS)
+	err = json.Unmarshal(configBSJson, &configBS)
 	if err != nil {
 		err = fmt.Errorf("err %s: could not decode config.json", err)
 		return "", err

@@ -22,8 +22,8 @@ func GetPlayerChoice() string {
 	return playerChoice
 }
 
-func SetMagnetChoice() {
-	chosenResultMagnet = targetChoice
+func SetMagnetChoice(magnet string) {
+	chosenResultMagnet = magnet
 }
 
 func GetMagnetFromListModel() string {
