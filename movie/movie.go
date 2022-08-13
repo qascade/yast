@@ -22,8 +22,6 @@ type Movie struct {
 	Uploader string
 }
 
-
-
 func (m Movie) FilterValue() string {
 	utils.LogUnimplementedFunc()
 	return ""

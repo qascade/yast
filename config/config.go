@@ -48,20 +48,31 @@ func UpdateConfigJSON(playerChange bool, targetChange bool, reset bool) error {
 	}
 	if playerChange {
 		//Doing Code duplication here, Should Keep it same as it won't remain same once target-preference is added.
-		err := RemoveConfigJSON()
-		if err != nil {
-			return fmt.Errorf("err %s: could not remove config.json", err)
-		}
-		ConfigJsonExists = false
 		var configBS ConfigBuildSpec
 		var configFile *os.File
-		configFile, err = CreateConfigJSON()
-		if err != nil {
-			return fmt.Errorf("err %s: could not create config.json", err)
-		}
-		configBS, err = GetConfigBSFromSetupModel()
+
+		configBS, err := GetConfigBSFromSetupModel()
 		if err != nil {
 			return err
+		}
+		//Player quits without choosing a player.
+		if configBS.Player == "" {
+			configBS.Player, err = GetPlayerFromExistingConfig()
+			if err != nil {
+				err = fmt.Errorf("err %s: could not get player from existing config", err)
+				return err
+			}
+		} else {
+			err := RemoveConfigJSON()
+			ConfigJsonExists = false
+			if err != nil {
+				return fmt.Errorf("err %s: could not remove config.json", err)
+			}
+
+			configFile, err = CreateConfigJSON()
+			if err != nil {
+				return fmt.Errorf("err %s: could not create config.json", err)
+			}
 		}
 		err = FillConfigJSON(configFile, &configBS)
 		if err != nil {
@@ -70,7 +81,7 @@ func UpdateConfigJSON(playerChange bool, targetChange bool, reset bool) error {
 		return nil
 	}
 	if targetChange {
-		utils.TraceMsg("TODO-Target Preference yet to be added in SetupModel. Defaulting to piratebay for now.")
+		utils.TraceMsg("TODO-Target Preference yet to be added in SetupModel. Defaulting to 1337x.to for now.")
 		return nil
 	}
 	return nil
@@ -85,23 +96,48 @@ func GetConfigBSFromSetupModel() (ConfigBuildSpec, error) {
 	}
 	PlayerChoiceFromTui = tui.GetPlayerChoice()
 	configBS.Player = PlayerChoiceFromTui
-	utils.TraceMsg("TODO-Target Preference yet to be added in SetupModel. Defaulting to piratebay for now.")
+	utils.TraceMsg("TODO-Target Preference yet to be added in SetupModel. Defaulting to 1337x.to for now.")
 	return configBS, nil
 }
 
-func GetDefaultTarget() (string, error) {
+func GetExistingTargetFromConfig() (string, error) {
 	configFile, err := os.Open(DefaultConfigPath)
+	if err != nil {
+		err = fmt.Errorf("err %s: could not open config.json", err)
+		return "", err
+	}
 	var configBSJson []byte
 	configBSJson, err = ioutil.ReadAll(configFile)
 	if err != nil {
-		err = fmt.Errorf("err %s: could not open config.json", err)
+		err = fmt.Errorf("err %s: could not read config.json", err)
 		return "", err
 	}
 	configBS := ConfigBuildSpec{}
 	err = json.Unmarshal(configBSJson, &configBS)
 	if err != nil {
-		err = fmt.Errorf("err %s: could not decode config.json", err)
+		err = fmt.Errorf("err %s: could not unmarshall config.json", err)
 		return "", err
 	}
 	return configBS.TargetPreference, nil
+}
+
+func GetPlayerFromExistingConfig() (string, error) {
+	configFile, err := os.Open(DefaultConfigPath)
+	if err != nil {
+		err = fmt.Errorf("err %s: could not open config.json", err)
+		return "", err
+	}
+	var configBSJson []byte
+	configBSJson, err = ioutil.ReadAll(configFile)
+	if err != nil {
+		err = fmt.Errorf("err %s: could not read config.json", err)
+		return "", err
+	}
+	configBS := ConfigBuildSpec{}
+	err = json.Unmarshal(configBSJson, &configBS)
+	if err != nil {
+		err = fmt.Errorf("err %s: could not unmarshall config.json", err)
+		return "", err
+	}
+	return configBS.Player, nil
 }

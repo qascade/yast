@@ -40,6 +40,7 @@ func (q *SearchQuery) Search() (results []scraper.Result, err error) {
 	q.searched = true
 	return
 }
+
 // To be used when implementing Query History
 func (q *SearchQuery) GetResults() (results []scraper.Result, err error) {
 	if !q.searched {

@@ -42,15 +42,15 @@ func (s *Scraper) Scrape(context *QueryContext) (results []Result, err error) {
 	if context.Type == "movie" {
 		if context.Target == TARGET_PIRATEBAY {
 			results, err = s.scrapePirateBay(context)
-			return 
+			return
 		}
 		if context.Target == TARGET_1337X {
 			//utils.LogTraceMsg("1337x scraper not yet implemented")
 			results, err = s.scrape1337x(context)
 			//results, err = s.scrape1337x(context)
-			return 
+			return
 		}
-	} 
+	}
 	if context.Type == "series" {
 		utils.LogTraceMsg("series scraper not implemented yet")
 	}

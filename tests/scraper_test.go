@@ -2,8 +2,8 @@ package test
 
 import (
 	"fmt"
-	"testing"
 	"github.com/stretchr/testify/require"
+	"testing"
 
 	"github.com/qascade/yast/scraper"
 )
@@ -22,5 +22,5 @@ func TestScraper(t *testing.T) {
 	fmt.Printf("%+v\n", results)
 
 	require.NoError(t, err, fmt.Sprintf("error scraping: %s", err))
-	require.NotEmpty(t, results, fmt.Sprintf("result is empty"))
+	require.NotEmpty(t, results, "result is empty")
 }

@@ -4,7 +4,7 @@ All rights reserved.
 This Project is under BSD-3 License Clause.
 Look at License for more detail.
 */
-//This file will contain the functions to start the stream based on player choice. 
+//This file will contain the functions to start the stream based on player choice.
 
 package tui
 

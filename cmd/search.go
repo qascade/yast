@@ -65,14 +65,14 @@ func Search(cmd *cobra.Command, args []string) error {
 		return err
 	}
 	if bothSet {
-		err = fmt.Errorf("You can only search for either movie or series at a time")
+		err = fmt.Errorf("err: you can only search for either movie or series at a time")
 		return err
 	}
 	if movieSet {
 		MovieName = cmd.Flag("movie").Value.String()
 		fmt.Println("Searching for movie: ", MovieName)
 
-		defaultTarget, err := config.GetDefaultTarget()
+		defaultTarget, err := config.GetExistingTargetFromConfig()
 		if err != nil {
 			return err
 		}
