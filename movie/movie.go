@@ -22,16 +22,7 @@ type Movie struct {
 	Uploader string
 }
 
-func NewMovie(name string, uploaded time.Time, magnet string, size string, seeds int, uploader string) (*Movie, error) {
-	return &Movie{
-		Name:     name,
-		Uploaded: uploaded,
-		Magnet:   magnet,
-		Size:     size,
-		Seeds:    seeds,
-		Uploader: uploader,
-	}, nil
-}
+
 
 func (m Movie) FilterValue() string {
 	utils.LogUnimplementedFunc()

@@ -25,7 +25,7 @@ func TestConfigJson(t *testing.T) {
 	//Stub for ConfigBuildSpec
 	var testConfigBS = config.ConfigBuildSpec{
 		Player:           "vlc",
-		TargetPreference: "piratebay",
+		TargetPreference: "pirate-bay",
 		QueryHistory:     true,
 	}
 

@@ -9,6 +9,8 @@ package config
 import (
 	"fmt"
 	"os"
+
+	"github.com/qascade/yast/scraper"
 )
 
 func SetupYast() error {
@@ -26,6 +28,9 @@ func SetupYast() error {
 	if err != nil {
 		return fmt.Errorf("err %s: could not get config build spec from setup model", err)
 	}
+	//Putting default targetPreference as piratebay
+	configBS.TargetPreference = scraper.TARGET_PIRATEBAY
+
 	FillConfigJSON(configFile, &configBS)
 	return nil
 

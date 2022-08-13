@@ -14,7 +14,6 @@ import (
 
 	"github.com/qascade/yast/tui"
 	"github.com/qascade/yast/utils"
-	//"github.com/tidwall/sjson"
 )
 
 func FillConfigJSON(configFile *os.File, configBS *ConfigBuildSpec) error {

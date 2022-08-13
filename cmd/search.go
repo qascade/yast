@@ -78,17 +78,18 @@ func Search(cmd *cobra.Command, args []string) error {
 		}
 
 		context := scraper.NewQueryContext("movie", MovieName, defaultTarget)
-		Query := core.NewSearchQuery(context)
+		query := core.NewSearchQuery(context)
 		var results []scraper.Result
 		if err != nil {
 			return err
 		}
 
-		results, err = Query.Search()
+		results, err = query.Search()
 		if err != nil {
 			return err
 		}
 
+		//Stream will be called by tui
 		err = tui.RenderListModelView("", results)
 		if err != nil {
 			return err
