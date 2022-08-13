@@ -182,8 +182,10 @@ func newItemDelegate(keys *delegateKeyMap) list.DefaultDelegate {
 
 	d.UpdateFunc = func(msg tea.Msg, m *list.Model) tea.Cmd {
 		var title string
+		var magnet string
 		if i, ok := m.SelectedItem().(movie.Movie); ok {
 			title = i.Name
+			magnet = i.Magnet
 		} else {
 			return nil
 		}
@@ -194,7 +196,8 @@ func newItemDelegate(keys *delegateKeyMap) list.DefaultDelegate {
 			//This case will be used to call ResultModel View for the selected result
 			//For now just printing the Title
 			case key.Matches(msg, keys.choose):
-				return m.NewStatusMessage(statusMessageStyle("You chose " + title))
+				//webtorrent api call
+				//return m.NewStatusMessage(statusMessageStyle("You chose " + title))
 			}
 		}
 

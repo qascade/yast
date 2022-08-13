@@ -9,9 +9,11 @@ package config
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"os"
+
 	"github.com/qascade/yast/tui"
 	"github.com/qascade/yast/utils"
-	"os"
 	//"github.com/tidwall/sjson"
 )
 
@@ -86,4 +88,22 @@ func GetConfigBSFromSetupModel() (ConfigBuildSpec, error) {
 	configBS.Player = PlayerChoiceFromTui
 	utils.TraceMsg("TODO-Target Preference yet to be added in SetupModel. Defaulting to piratebay for now.")
 	return configBS, nil
+}
+
+func GetDefaultTarget() (string, error) {
+	configFile, err := os.Open(DefaultConfigPath)
+	var configBSJson []byte
+	configBSJson, err = ioutil.ReadAll(configFile)
+	if err != nil {
+		err = fmt.Errorf("err %s: could not open config.json", err)
+		return "", err
+	}
+	configBS := ConfigBuildSpec{}
+	decoder := json.NewDecoder(configFile)
+	err = decoder.Decode(&configBS)
+	if err != nil {
+		err = fmt.Errorf("err %s: could not decode config.json", err)
+		return "", err
+	}
+	return configBS.TargetPreference, nil
 }

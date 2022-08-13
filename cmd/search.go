@@ -9,8 +9,11 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/qascade/yast/config"
 	"github.com/qascade/yast/query"
 	"github.com/qascade/yast/scraper"
+	"github.com/qascade/yast/tui"
+
 	"github.com/spf13/cobra"
 )
 
@@ -68,13 +71,28 @@ func Search(cmd *cobra.Command, args []string) error {
 	if movieSet {
 		MovieName = cmd.Flag("movie").Value.String()
 		fmt.Println("Searching for movie: ", MovieName)
-		context := scraper.NewQueryContext("movie", MovieName)
-		Query := core.NewSearchQuery(context)
-		var results []*scraper.Result
+
+		defaultTarget, err := config.GetDefaultTarget()
 		if err != nil {
 			return err
 		}
-		Query.Search()
+
+		context := scraper.NewQueryContext("movie", MovieName, defaultTarget)
+		Query := core.NewSearchQuery(context)
+		var results []scraper.Result
+		if err != nil {
+			return err
+		}
+
+		results, err = Query.Search()
+		if err != nil {
+			return err
+		}
+
+		err = tui.RenderListModelView("", results)
+		if err != nil {
+			return err
+		}
 		fmt.Println(results)
 	}
 	if seriesSet {
