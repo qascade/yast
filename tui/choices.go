@@ -8,9 +8,24 @@ Look at License for more detail.
 //This package will contain all the choices a player can have while interacting with tui
 package tui
 
-var PlayerChoice string
-var TargetChoice string
+var (
+	playerChoice       string
+	targetChoice       string
+	chosenResultMagnet string
+)
+
+func SetPlayerChoice(choice string) {
+	playerChoice = choice
+}
 
 func GetPlayerChoice() string {
-	return PlayerChoice
+	return playerChoice
+}
+
+func SetMagnetChoice() {
+	chosenResultMagnet = targetChoice
+}
+
+func GetMagnetFromListModel() string {
+	return chosenResultMagnet
 }

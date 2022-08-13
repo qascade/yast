@@ -65,10 +65,10 @@ func chosenView(m SetupModel) string {
 	switch m.Choice {
 	case 0:
 		msg = "You Chose WebTorrent Player. Happy Streaming 🙂"
-		PlayerChoice = "web-torrent"
+		SetPlayerChoice("web-torrent")
 	case 1:
 		msg = "You Chose VLC. Happy Streaming 🙂"
-		PlayerChoice = "vlc"
+		SetPlayerChoice("vlc")
 	}
 	m.Quitting = true
 	return msg + "\n\nPress q to Quit."

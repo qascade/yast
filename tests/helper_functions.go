@@ -59,6 +59,7 @@ func getFileHash(f string) (hashVal string, err error) {
 
 	return fmt.Sprintf("%x", hash.Sum(nil)), nil
 }
+
 func assertFilesMatch(t *testing.T, path string, otherPath string) {
 	fileHash, err := getFileHash(path)
 	if err != nil {
