@@ -8,6 +8,7 @@ package cmd
 
 import (
 	"fmt"
+	"sync"
 
 	"github.com/qascade/yast/config"
 	"github.com/qascade/yast/query"
@@ -65,7 +66,7 @@ func Search(cmd *cobra.Command, args []string) error {
 		return err
 	}
 	if bothSet {
-		err = fmt.Errorf("err: you can only search for either movie or series at a time")
+		err = fmt.Errorf("you can only search for either movie or series at a time")
 		return err
 	}
 	if movieSet {
@@ -83,18 +84,32 @@ func Search(cmd *cobra.Command, args []string) error {
 		if err != nil {
 			return err
 		}
+		// Adding wait group to wait for search results to come before rendering the list model.
+		var wg sync.WaitGroup
 
-		results, err = query.Search()
+		wg.Add(1)
+		errc := make(chan error)
+		resultsc := make(chan []scraper.Result)
+		go func() {
+			// Decrement the counter when the go routine completes
+			defer wg.Done()
+			// Call the function check
+			results, err = query.Search()
+			if err != nil {
+				errc <- err
+			}
+			resultsc <- results
+		}()
+		wg.Wait()
+		//Stream will be called by tui
+		results, err = <-resultsc, <-errc
 		if err != nil {
 			return err
 		}
-
-		//Stream will be called by tui
 		err = tui.RenderListModelView("", results)
 		if err != nil {
 			return err
 		}
-		fmt.Println(results)
 	}
 	if seriesSet {
 		SeriesName = cmd.Flag("series").Value.String()

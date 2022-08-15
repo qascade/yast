@@ -26,10 +26,10 @@ func GenerateCommand(magnet, defaultPlayer string) string {
 }
 
 func StartStream() error {
+	fmt.Printf("Stream is Starting!!\n")
 	chosenMagnet := GetMagnetFromListModel()
 	cmdStr := GenerateCommand(chosenMagnet, GetPlayerChoice())
 	cmd := exec.Command(cmdStr)
-	fmt.Printf("Stream is Starting!!\n")
 	if err := cmd.Run(); err != nil {
 		return fmt.Errorf("error starting stream: %v", err)
 	}
