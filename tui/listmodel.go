@@ -133,6 +133,8 @@ func (m ListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 
 		switch {
+		case tea.Quit():
+			return nil, tea.Quit
 		case key.Matches(msg, m.keys.toggleSpinner):
 			cmd := m.list.ToggleSpinner()
 			return m, cmd
@@ -198,7 +200,17 @@ func newItemDelegate(keys *delegateKeyMap) list.DefaultDelegate {
 			case key.Matches(msg, keys.choose):
 				//webtorrent api call
 				SetMagnetChoice(magnet)
-				StartStream()
+				// var wg sync.WaitGroup
+				// wg.Add(1)
+				// go func() {
+				// 	defer wg.Done()
+				// 	err := StartStream()
+				// 	if err != nil {
+				// 		panic(err)
+				// 	}
+				// }()
+				// wg.Wait()
+				return tea.Quit
 				//return m.NewStatusMessage(statusMessageStyle("You chose " + title))
 			}
 		}
