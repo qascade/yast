@@ -28,6 +28,7 @@ func CreateConfigJSON() (*os.File, error) {
 	if err != nil {
 		return nil, err
 	}
+	ConfigJsonExists = true
 	return configFile, nil
 }
 
@@ -36,6 +37,7 @@ func RemoveConfigJSON() error {
 	if err != nil {
 		return err
 	}
+	ConfigJsonExists = false
 	return nil
 }
 

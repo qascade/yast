@@ -12,6 +12,7 @@ import (
 	"io/ioutil"
 	"os"
 
+	"github.com/qascade/yast/scraper"
 	"github.com/qascade/yast/tui"
 	"github.com/qascade/yast/utils"
 )
@@ -29,7 +30,6 @@ func UpdateConfigJSON(playerChange bool, targetChange bool, reset bool) error {
 		if err != nil {
 			return fmt.Errorf("err %s: could not remove config.json", err)
 		}
-		ConfigJsonExists = false
 		var configBS ConfigBuildSpec
 		var configFile *os.File
 		configFile, err = CreateConfigJSON()
@@ -97,6 +97,7 @@ func GetConfigBSFromSetupModel() (ConfigBuildSpec, error) {
 	PlayerChoiceFromTui = tui.GetPlayerChoice()
 	configBS.Player = PlayerChoiceFromTui
 	utils.TraceMsg("TODO-Target Preference yet to be added in SetupModel. Defaulting to 1337x.to for now.")
+	configBS.TargetPreference = scraper.TARGET_1337X
 	return configBS, nil
 }
 

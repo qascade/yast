@@ -35,6 +35,6 @@ func (m Movie) Title() string {
 
 // TODO: Modify this to show Metadata for the result item
 func (m Movie) Description() string {
-	var metadata = fmt.Sprintf("Uploaded: %s || Size: %s || Seeds: %d", m.Uploaded, m.Size, m.Seeds)
+	var metadata = fmt.Sprintf("Uploaded: %s || Size: %s || Seeds: %s", m.Uploaded, m.Size, m.Seeds)
 	return metadata
 }
