@@ -8,17 +8,15 @@ package movie
 
 import (
 	"fmt"
-	"time"
-
 	"github.com/qascade/yast/utils"
 )
 
 type Movie struct {
 	Name     string
-	Uploaded time.Time
+	Uploaded string
 	Magnet   string //link webtorrent
 	Size     string
-	Seeds    int
+	Seeds    string //as of new seeds are already sorted in descending order in 1337x.to
 	Uploader string
 }
 
@@ -35,8 +33,8 @@ func (m Movie) Title() string {
 	return m.Name
 }
 
-//TODO: Modify this to show Metadata for the result item
+// TODO: Modify this to show Metadata for the result item
 func (m Movie) Description() string {
-	var metadata = fmt.Sprintf("Uploaded: %s || Size: %s || Seeds: %d", m.Uploaded.Format("2006-01-02"), m.Size, m.Seeds)
+	var metadata = fmt.Sprintf("Uploaded: %s || Size: %s || Seeds: %d", m.Uploaded, m.Size, m.Seeds)
 	return metadata
 }

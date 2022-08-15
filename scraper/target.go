@@ -8,8 +8,11 @@ package scraper
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/gocolly/colly"
+	"github.com/qascade/yast/movie"
+	// "github.com/qascade/yast/movie"
 	//"github.com/qascade/yast/movie"
 )
 
@@ -44,13 +47,46 @@ func (s *Scraper) scrapePirateBay(context *QueryContext) (results []Result, err 
 }
 
 func (s *Scraper) scrape1337x(context *QueryContext) (results []Result, err error) {
+
 	results = make([]Result, 0)
 	url := fmt.Sprintf("https://1337x.to/search/%s/1/", context.Query)
 	s.collector.OnHTML("tr", func(e *colly.HTMLElement) {
 		movieMetaDataDOM := e.DOM
-		fmt.Println(movieMetaDataDOM.Text())
+		// fmt.Println(e.ChildAttr("#coll-1 name", "href"))
+		// anchorTagDom := movieMetaDataDOM.Find("a").Siblings()
+		// fmt.Println(anchorTagDom.Text())
+		// fmt.Println(anchorTagDom.Attr("href"))
+
+		newMovie := movieFromString(movieMetaDataDOM.Text())
+		fmt.Println(newMovie)
+		results = append(results, newMovie)
 
 	})
+
 	s.collector.Visit(url)
+
+	results = results[1:]
 	return
+}
+
+func getMagnetUrl()
+
+func movieFromString(data string) movie.Movie {
+	elements := strings.Split(data, "\n")
+	return movie.Movie{
+		Name:     elements[1],
+		Uploaded: elements[4],
+		Magnet:   "magnet_url",
+		Size:     formatSize(elements[5]),
+		Seeds:    elements[2],
+		Uploader: elements[6],
+	}
+}
+
+func formatSize(size string) string {
+	idx := strings.Index(size, "B")
+	size = size[:idx+1]
+	fmt.Println(size, idx)
+
+	return size
 }
