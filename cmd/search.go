@@ -131,15 +131,6 @@ func Search(cmd *cobra.Command, args []string) error {
 
 func init() {
 	yastCmd.AddCommand(SearchCmd)
-
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// searchCmd.PersistentFlags().String("foo", "", "A help for foo")
 	SearchCmd.Flags().StringVarP(&MovieName, "movie", "m", "", "name of the movie to be searched")
 	SearchCmd.Flags().StringVar(&SeriesName, "series", "", "name of the series to be searched")
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// searchCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

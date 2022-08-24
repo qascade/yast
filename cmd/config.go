@@ -48,15 +48,7 @@ func CallUpdateConfig(cmd *cobra.Command, args []string) error {
 func init() {
 	yastCmd.AddCommand(ConfigCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// configCmd.PersistentFlags().String("foo", "", "A help for foo")
 	ConfigCmd.Flags().Bool("player", true, "Change Default Player to use for streaming")
 	ConfigCmd.Flags().Bool("reset", true, "Reset the user preferences")
 	ConfigCmd.Flags().Bool("target", true, "Change Default Target for searching movies/tv-series")
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// configCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
