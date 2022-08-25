@@ -9,19 +9,57 @@
 
 ## ⚡️ Quick start
 
-First, [download](https://golang.org/dl/) and install **Go**. Version `1.18` or higher is required.
+1. [Download](https://golang.org/dl/) and install **Go**. Version `1.18` or higher is required.
+
+2. [Download](https://github.com/webtorrent/webtorrent-cli) and install **WebTorrent-CLI**. 
+3. [Download](https://www.videolan.org/) and install VLC Media Player. (Support for more players will be added in the next release)
+```bash
+npm install webtorrent-cli -g
+```
+3. Clone the repo and go inside the repo folder.
+```bash
+git clone https://github.com/qascade/yast && cd yast
+```
+
+4. Build the binary
+```bash
+go build
+```
+5. Run the binary
+```bash
+./yast --help
+YAST is a TUI utility that will let you stream your favorite movies/tv-series in one command.
+
+Usage:
+  yast [command]
+
+Available Commands:
+  completion  Generate the autocompletion script for the specified shell
+  config      Used to change already set user preferences or reset the user preferences to default
+  help        Help about any command
+  search      A brief description of your command
+  setup       setup yast for first-time users
+
+Flags:
+  -h, --help   help for yast
+
+Use "yast [command] --help" for more information about a command.
+```
+6. Search for a movie. 
+```bash
+./yast search -m spiderman
+```
+7. Select desired movie from the list.
+<img height="550" width="800" alt="Screenshot 2022-08-25 at 5 40 13 AM" src="https://user-images.githubusercontent.com/54154054/186545637-6cc844c4-0102-4491-8dac-a6648002a219.png">
+8. The movie starts with the default Player. Wohoo!!
 
 ## NOTE
+1. The current supported target requires VPN to get results. Please make sure that you are connected to a VPN Server before searching or you may not get the results. We personally recommend using CloudFlare Warp. You can [download](https://1.1.1.1/) it here.
+2. The Project is still in development stage. So, you might see undesired behaviour while using yast. Please file an issue if you experience any bugs or undesired behaviour. 
 
-Project still in development stage. Will be available to stream movies by end of August. In the meanwhile, you can look at these design docs on how we are planning to build this tool.
-Contributions and suggestions are always welcome. 
-## Design Docs 
 
-[**Structure Design**](https://docs.google.com/document/d/1UHGnfGrgGyRTDN-Pku7QamPtbvk5Bin9dBn7n1JDMv8/edit?usp=sharing)
+## Contribution
+1. You can look at the design [docs](https://github.com/qascade/yast/blob/main/docs) on how we are planning to build this project.
+2. Contributions and suggestions are always welcome. 
+3. Look at [contibutions.md](https://github.com/qascade/yast/blob/main/contributions.md) for more details.
 
-[**Command Design**](https://docs.google.com/document/d/1RfgyEZspIOFJCn0b4ZE0ZEXBEAOYSrPeA1itbRKs1sI/edit?usp=sharing)
-
-[**UI Design**](https://docs.google.com/document/d/1kt_9C1enPmliXcqxuFt19Td4XH5Tn8wnns4vdDrsM0E/edit?usp=sharing)
-
-## Design Diagrams 
-<img width="600" alt="Screenshot 2022-08-13 at 1 22 09 PM" src="https://user-images.githubusercontent.com/54154054/184474748-13b1f7bf-5af9-4f43-a9d9-bf8f40507d40.png">

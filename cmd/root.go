@@ -18,6 +18,7 @@ var yastCmd = &cobra.Command{
 	Use:   "yast",
 	Short: "Yet Another Streaming Tool",
 	Long:  `YAST is a TUI utility that will let you stream your favorite movies/tv-series in one command.`,
+	//Keeping these comments here for the header model
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	// Run: func(cmd *cobra.Command, args []string) { },

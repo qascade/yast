@@ -5,7 +5,7 @@ This Project is under BSD-3 License Clause.
 Look at License for more detail.
 */
 
-//This package will contain all the choices a player can have while interacting with tui
+//This file will contain all the choices a player can have while interacting with tui
 package tui
 
 var (
@@ -22,8 +22,8 @@ func GetPlayerChoice() string {
 	return playerChoice
 }
 
-func SetMagnetChoice() {
-	chosenResultMagnet = targetChoice
+func SetMagnetChoice(magnet string) {
+	chosenResultMagnet = magnet
 }
 
 func GetMagnetFromListModel() string {

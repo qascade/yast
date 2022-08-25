@@ -133,6 +133,8 @@ func (m ListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 
 		switch {
+		case tea.Quit():
+			return nil, tea.Quit
 		case key.Matches(msg, m.keys.toggleSpinner):
 			cmd := m.list.ToggleSpinner()
 			return m, cmd
@@ -181,9 +183,11 @@ func newItemDelegate(keys *delegateKeyMap) list.DefaultDelegate {
 	d := list.NewDefaultDelegate()
 
 	d.UpdateFunc = func(msg tea.Msg, m *list.Model) tea.Cmd {
-		var title string
+		//var title string
+		var magnet string
 		if i, ok := m.SelectedItem().(movie.Movie); ok {
-			title = i.Name
+			//title = i.Name
+			magnet = i.Magnet
 		} else {
 			return nil
 		}
@@ -194,7 +198,20 @@ func newItemDelegate(keys *delegateKeyMap) list.DefaultDelegate {
 			//This case will be used to call ResultModel View for the selected result
 			//For now just printing the Title
 			case key.Matches(msg, keys.choose):
-				return m.NewStatusMessage(statusMessageStyle("You chose " + title))
+				//webtorrent api call
+				SetMagnetChoice(magnet)
+				// var wg sync.WaitGroup
+				// wg.Add(1)
+				// go func() {
+				// 	defer wg.Done()
+				// 	err := StartStream()
+				// 	if err != nil {
+				// 		panic(err)
+				// 	}
+				// }()
+				// wg.Wait()
+				return tea.Quit
+				//return m.NewStatusMessage(statusMessageStyle("You chose " + title))
 			}
 		}
 
