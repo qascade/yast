@@ -74,5 +74,5 @@ Use "yast [command] --help" for more information about a command.
 ## 🤝 Contribution
 1. You can look at the design [docs](https://github.com/qascade/yast/blob/main/docs) on how we are planning to build this project.
 2. Contributions and suggestions are always welcome. 
-3. Look at [contibutions.md](https://github.com/qascade/yast/blob/main/contributions.md) for more details.
+3. Look at [contributions.md](https://github.com/qascade/yast/blob/main/contributions.md) for more details.
 
