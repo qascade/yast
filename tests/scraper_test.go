@@ -4,12 +4,11 @@ import (
 	//"fmt"
 	//"github.com/stretchr/testify/require"
 	"testing"
-
 	//"github.com/qascade/yast/scraper"
 )
 
 //This test will fail on workflows due to 1337x.to not being reachable.
-//Please make sure that these tests pass locally. 
+//Please make sure that these tests pass locally.
 func TestScraper(t *testing.T) {
 	// fmt.Println("Executing Scraper Test")
 	// var tests []string = []string{
