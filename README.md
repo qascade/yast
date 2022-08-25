@@ -27,7 +27,7 @@ go build
 ```
 5. Run the binary
 ```bash
-./yast
+./yast --help
 YAST is a TUI utility that will let you stream your favorite movies/tv-series in one command.
 
 Usage:
