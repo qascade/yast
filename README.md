@@ -12,20 +12,20 @@
 1. [Download](https://golang.org/dl/) and install **Go**. Version `1.18` or higher is required.
 
 2. [Download](https://github.com/webtorrent/webtorrent-cli) and install **WebTorrent-CLI**. 
-3. [Download](https://www.videolan.org/) and install VLC Media Player. (Support for more players will be added in the next release)
 ```bash
 npm install webtorrent-cli -g
 ```
-3. Clone the repo and go inside the repo folder.
+3. [Download](https://www.videolan.org/) and install VLC Media Player. (Support for more players will be added in the next release)
+
+4. Clone the repo and go inside the repo folder.
 ```bash
 git clone https://github.com/qascade/yast && cd yast
 ```
-
-4. Build the binary
+5. Build the binary
 ```bash
-go build
+go build ./...
 ```
-5. Run the binary
+6. Run the binary
 ```bash
 ./yast --help
 YAST is a TUI utility that will let you stream your favorite movies/tv-series in one command.
@@ -45,13 +45,13 @@ Flags:
 
 Use "yast [command] --help" for more information about a command.
 ```
-6. Search for a movie. 
+7. Search for a movie. 
 ```bash
 ./yast search -m spiderman
 ```
-7. Select desired movie from the list.
+8. Select desired movie from the list.
 <img height="550" width="800" alt="Screenshot 2022-08-25 at 5 40 13 AM" src="https://user-images.githubusercontent.com/54154054/186545637-6cc844c4-0102-4491-8dac-a6648002a219.png">
-8. The movie starts with the default Player. Wohoo!!
+9. The movie starts with the default Player. Wohoo!!
 
 ## NOTE
 1. The current supported target requires VPN to get results. Please make sure that you are connected to a VPN Server before searching or you may not get the results. We personally recommend using CloudFlare Warp. You can [download](https://1.1.1.1/) it here.
