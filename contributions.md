@@ -1,11 +1,13 @@
 # Contributing Guidelines
 
-Contributions welcome!
+Contributions are always welcome!
 
 **Before spending lots of time on something, ask for feedback on your idea first!**
 
+
 Please search issues and pull requests before adding something new to avoid duplicating
 efforts and conversations.
+
 
 This project welcomes non-code contributions, too! The following types of contributions
 are welcome:
@@ -35,14 +37,14 @@ There are a few basic ground-rules for contributors:
    to solicit feedback from other contributors.
 4. **Pull requests** are *encouraged* for all contributions to solicit feedback, but left to
    the discretion of the contributor.
-5. **Pull requests** require atleast one approval from collaborators with write access before merge to main. 
+5. **Pull requests** require atleast one approval from collaborators with write access before merge to **main**. 
 6. **Pull requests** must pass all the workflows before merging into **main**.  
 
 ### Releases
 
 Declaring formal releases remains the prerogative of the project maintainer.
 
-## Developer's Certificate of Origin 1.1
+## Developer's Certificate of Origin 1.0
 
 By making a contribution to this project, I certify that:
 
