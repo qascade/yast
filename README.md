@@ -45,13 +45,18 @@ Flags:
 
 Use "yast [command] --help" for more information about a command.
 ```
-7. Search for a movie. 
+7. Run the following to choose default player.
+```bash
+./yast setup 
+```
+8. Search for a movie. 
 ```bash
 ./yast search -m spiderman
 ```
-8. Select desired movie from the list.
+9. Select desired movie from the list.
 <img height="550" width="800" alt="Screenshot 2022-08-25 at 5 40 13 AM" src="https://user-images.githubusercontent.com/54154054/186545637-6cc844c4-0102-4491-8dac-a6648002a219.png">
-9. The movie starts with the default Player. Wohoo!!
+
+10. The movie starts with the default Player. Wohoo!!
 
 ## NOTE
 1. The current supported target requires VPN to get results. Please make sure that you are connected to a VPN Server before searching or you may not get the results. We personally recommend using CloudFlare Warp. You can [download](https://1.1.1.1/) it here.
