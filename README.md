@@ -40,7 +40,7 @@ Available Commands:
   completion  Generate the autocompletion script for the specified shell
   config      Used to change already set user preferences or reset the user preferences to default
   help        Help about any command
-  search       Search for a movie or tv-series that you want to watch
+  search      Search for a movie or tv-series that you want to watch
   setup       setup yast for first-time users
 
 Flags:
