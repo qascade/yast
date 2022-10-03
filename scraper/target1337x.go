@@ -4,62 +4,96 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/PuerkitoBio/goquery"
 	"github.com/qascade/yast/movie"
 
 	colly "github.com/gocolly/colly"
 )
 
+// scrape1337x returns the scraped results in Result type
 func (s *Scraper) scrape1337x(context *QueryContext) (results []Result, err error) {
 
+	var links []string
+	var movielist []movie.Movie
 	results = make([]Result, 0)
+
 	url := fmt.Sprintf("https://1337x.to/search/%s/1/", context.Query)
+
 	s.collector.OnHTML("tr", func(e *colly.HTMLElement) {
-		movieMetaDataDOM := e.DOM
-		anchorTagDom := movieMetaDataDOM.Find("a").Siblings()
 
-		var magnet string
-		if magnetPageUrl, exists := anchorTagDom.Attr("href"); exists {
-			magnet = getMagnetLink("https://1337x.to" + magnetPageUrl)
+		doc := e.DOM
+		anchortags := doc.Find("a").Siblings()
+
+		if attr, exists := anchortags.Attr("href"); exists {
+			if strings.Contains(attr, "/torrent/") && !strings.HasPrefix(attr, "http://") {
+				link := "https://1337x.to" + attr
+				links = append(links, link)
+			}
 		}
+		newmovie := movieFromString(doc)
+		movielist = append(movielist, newmovie)
 
-		newMovie := movieFromString(movieMetaDataDOM.Text(), magnet)
-		newMovie.Magnet = magnet
-		results = append(results, newMovie)
+	})
+	s.collector.OnHTML("div.col-9 div.box-info", func(h *colly.HTMLElement) {
 
+		metadata := h.DOM
+
+		movieName := metadata.Find("div.box-info-heading h1").Text()
+		metadata.Find("a").Each(func(i int, s *goquery.Selection) {
+			if magnet, exists := s.Attr("href"); exists {
+				if strings.Contains(magnet, "magnet") {
+					for i, movie := range movielist {
+						if compareNamesfromdifferentPages(strings.TrimSpace(movie.Name), strings.TrimSpace(movieName)) {
+							movielist[i].Magnet = magnet
+						}
+					}
+				}
+			}
+		})
 	})
 
 	s.collector.Visit(url)
-	results = results[1:]
+	for _, link := range links {
+		s.collector.Visit(link)
+	}
+	for _, movie := range movielist[1:] {
+		results = append(results, movie)
+	}
 	return
 }
 
-func movieFromString(data string, magnet string) movie.Movie {
-	elements := strings.Split(data, "\n")
-	// Need to find a better way to do the parsing. This is fragile.
+// movieFromString returns a type Movie
+func movieFromString(document *goquery.Selection) movie.Movie {
 	return movie.Movie{
-		Name:     elements[1],
-		Uploaded: elements[4],
-		Magnet:   magnet,
-		Size:     formatSize1337x(elements[5]),
-		Seeds:    elements[2],
-		Uploader: elements[6],
+		Name:     document.Find("td.name > a:nth-child(2)").Text(),
+		Uploaded: document.Find("td.coll-date").Text(),
+		Size:     formatSize1337x(strings.Replace(document.Find("td.size").Text(), document.Find("td.seeds").Text(), "", -1)),
+		Seeds:    document.Find("td.seeds").Text(),
+		Uploader: document.Find("td.coll-5").Text(),
 	}
 }
 
-func getMagnetLink(url string) (magnet string) {
-	s := NewScraper("1337x.to")
+// string comparison
+func compareNamesfromdifferentPages(a string, b string) bool {
 
-	s.collector.OnHTML("a", func(e *colly.HTMLElement) {
-		dom := e.DOM
-		potMagnet, _ := dom.Attr("href")
-		if strings.Contains(potMagnet, "magnet") {
-			magnet = potMagnet
+	if len(a) == 0 || len(b) == 0 {
+		return false
+	}
+	limit := len(a)
+	if len(b) < len(a) {
+		limit = len(b)
+	}
+	if limit > 65 {
+		limit = 65
+	}
+	for i := 0; i < limit; i++ {
+		if a[i] != b[i] {
+			return false
 		}
-	})
-
-	s.collector.Visit(url)
-	return
+	}
+	return true
 }
+
 func formatSize1337x(size string) string {
 	idx := strings.Index(size, "B")
 	size = size[:idx+1]
