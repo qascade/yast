@@ -9,7 +9,7 @@ package config
 var PlayerChoiceFromTui string
 var ConfigJsonExists bool
 
-//This function will call interactive tui for taking input of user preferences.
+// This function will call interactive tui for taking input of user preferences.
 type ConfigBuildSpec struct {
 	Player           string `json:"player"`
 	TargetPreference string `json:"target-preference"`

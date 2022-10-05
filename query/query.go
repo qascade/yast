@@ -11,7 +11,7 @@ import (
 	"github.com/qascade/yast/scraper"
 )
 
-//Keeping this here for now, might be used in building Query Registry
+// Keeping this here for now, might be used in building Query Registry
 type Query interface {
 	Search() (results []scraper.Result, err error)
 	//GetResults()

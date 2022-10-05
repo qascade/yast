@@ -72,7 +72,7 @@ type ListModel struct {
 	delegateKeys *delegateKeyMap
 }
 
-//title argument will be used later once tv-series is implemented.
+// title argument will be used later once tv-series is implemented.
 func NewListModel(title string, results scraper.Results) ListModel {
 	var (
 		delegateKeys = newDelegateKeyMap()
@@ -167,8 +167,8 @@ func (m ListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, tea.Batch(cmds...)
 }
 
-//This method is used to render ListModel View once query results are aquired by the scrper.
-//Also need to pass Results struct here for rendering.
+// This method is used to render ListModel View once query results are aquired by the scrper.
+// Also need to pass Results struct here for rendering.
 func RenderListModelView(title string, results scraper.Results) (err error) {
 	if err := tea.NewProgram(NewListModel(title, results)).Start(); err != nil {
 		err = fmt.Errorf("error: not able to render list model")

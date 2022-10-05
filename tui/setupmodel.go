@@ -80,7 +80,7 @@ func checkbox(label string, checked bool) string {
 	return fmt.Sprintf("[ ] %s", label)
 }
 
-//update Function for updating chosen item movement based on triggers (Arrow Keys)
+// update Function for updating chosen item movement based on triggers (Arrow Keys)
 func updateChoices(msg tea.Msg, m SetupModel) tea.Model {
 	switch msg := msg.(type) {
 
@@ -104,7 +104,7 @@ func updateChoices(msg tea.Msg, m SetupModel) tea.Model {
 	return m
 }
 
-//Main Update Function for SetupModel
+// Main Update Function for SetupModel
 func (m SetupModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	// Make sure these keys always quit
 	if msg, ok := msg.(tea.KeyMsg); ok {
@@ -124,14 +124,14 @@ func (m SetupModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return updateChosen(m), nil
 }
 
-//Update Function after the user has chosen the default player to stream
+// Update Function after the user has chosen the default player to stream
 func updateChosen(m SetupModel) tea.Model {
 	//Quit After Player has made his choice
 	m.Quitting = true
 	return m
 }
 
-//Function Call to Render SetupModel
+// Function Call to Render SetupModel
 func RenderSetupModelView() error {
 	setupModel := SetupModel{}
 	if err := tea.NewProgram(setupModel).Start(); err != nil {

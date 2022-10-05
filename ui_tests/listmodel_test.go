@@ -5,7 +5,7 @@ This Project is under BSD-3 License Clause.
 Look at License for more detail.
 */
 
-//Uncomment the test to check UI Rendering Locally.
+// Uncomment the test to check UI Rendering Locally.
 package ui_tests
 
 import (
