@@ -11,27 +11,27 @@ import (
 )
 
 // scrape1337x returns the scraped results in Result type
-func (s *Scraper) scrape1337x(context *QueryContext) (results []Result, err error) {
+func (s *Scraper) scrape1337x(context *QueryContext) ([]Result, error) {
 
 	var links []string
-	var movielist []movie.Movie
-	results = make([]Result, 0)
+	var movieList []movie.Movie
+	var results []Result
 
 	url := fmt.Sprintf("https://1337x.to/search/%s/1/", context.Query)
 
 	s.collector.OnHTML("tr", func(e *colly.HTMLElement) {
 
 		doc := e.DOM
-		anchortags := doc.Find("a").Siblings()
+		anchorTags := doc.Find("a").Siblings()
 
-		if attr, exists := anchortags.Attr("href"); exists {
+		if attr, exists := anchorTags.Attr("href"); exists {
 			if strings.Contains(attr, "/torrent/") && !strings.HasPrefix(attr, "http://") {
 				link := "https://1337x.to" + attr
 				links = append(links, link)
 			}
 		}
 		newmovie := movieFromString(doc)
-		movielist = append(movielist, newmovie)
+		movieList = append(movieList, newmovie)
 
 	})
 	s.collector.OnHTML("div.col-9 div.box-info", func(h *colly.HTMLElement) {
@@ -42,9 +42,9 @@ func (s *Scraper) scrape1337x(context *QueryContext) (results []Result, err erro
 		metadata.Find("a").Each(func(i int, s *goquery.Selection) {
 			if magnet, exists := s.Attr("href"); exists {
 				if strings.Contains(magnet, "magnet") {
-					for i, movie := range movielist {
-						if compareNamesfromdifferentPages(strings.TrimSpace(movie.Name), strings.TrimSpace(movieName)) {
-							movielist[i].Magnet = magnet
+					for i, movie := range movieList {
+						if compareNamesFromDiffPages(strings.TrimSpace(movie.Name), strings.TrimSpace(movieName)) {
+							movieList[i].Magnet = magnet
 						}
 					}
 				}
@@ -56,10 +56,10 @@ func (s *Scraper) scrape1337x(context *QueryContext) (results []Result, err erro
 	for _, link := range links {
 		s.collector.Visit(link)
 	}
-	for _, movie := range movielist[1:] {
+	for _, movie := range movieList[1:] {
 		results = append(results, movie)
 	}
-	return
+	return results, nil
 }
 
 // movieFromString returns a type Movie
@@ -73,8 +73,8 @@ func movieFromString(document *goquery.Selection) movie.Movie {
 	}
 }
 
-// string comparison
-func compareNamesfromdifferentPages(a string, b string) bool {
+// compareNamesFromDiffPages compares the movie name on different pages
+func compareNamesFromDiffPages(a string, b string) bool {
 
 	if len(a) == 0 || len(b) == 0 {
 		return false

@@ -1,15 +1,15 @@
 
 ## Description
-A clear and concise description of what is the problem/issue in the website.
+Use of a single collector to scrape 1337x target
 
 ## Screenshots
 Put any screenshot(s) here.
 
 ## Do you want to work on this issue?
-write yes or no
+yes
 
 ## How are you planning to resolve on this issue?
-Provide some information about the changes you'll be doing to resolve the issue.
+Introducing few code changes
 
 ## Are you raising this issue under hacktoberfest? (Remove this section if you are not a hacktoberfest participant)
 Yes, I'm raising this issue under hacktoberfest.
