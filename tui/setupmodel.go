@@ -106,6 +106,11 @@ func updateChoices(msg tea.Msg, m SetupModel) tea.Model {
 
 //Main Update Function for SetupModel
 func (m SetupModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	// Hand off the message and model to the appropriate update function for the
+	// appropriate view based on the current state.
+	if !m.Chosen {
+		return updateChoices(msg, m), nil
+	}
 	// Make sure these keys always quit
 	if msg, ok := msg.(tea.KeyMsg); ok {
 		k := msg.String()
@@ -113,12 +118,6 @@ func (m SetupModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			m.Quitting = true
 			return m, tea.Quit
 		}
-	}
-
-	// Hand off the message and model to the appropriate update function for the
-	// appropriate view based on the current state.
-	if !m.Chosen {
-		return updateChoices(msg, m), nil
 	}
 	m.Quitting = true
 	return updateChosen(m), nil
