@@ -15,6 +15,7 @@
 ```bash
 npm install webtorrent-cli -g
 ```
+> Note: use sudo if required
 
 3. [Download](https://www.videolan.org/) and install VLC Media Player. (Support for more players will be added in the next release)
 
@@ -25,7 +26,7 @@ git clone https://github.com/qascade/yast && cd yast
 
 5. 🏗 Build the binary.
 ```bash
-go build ./...
+go build
 ```
 
 6. 🏃🏻‍♀️ Run the binary.
@@ -60,6 +61,7 @@ Use "yast [command] --help" for more information about a command.
 ```bash
 ./yast search -m spiderman
 ```
+> If the movie name contains multiple words wrap it inside double quotes  e.g. `./yast search -m "spiderman no way home"`
 
 9. 😬 Select the desired movie from the list.
 <img height="550" width="800" alt="Screenshot 2022-08-25 at 5 40 13 AM" src="https://user-images.githubusercontent.com/54154054/186545637-6cc844c4-0102-4491-8dac-a6648002a219.png">
