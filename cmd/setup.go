@@ -7,7 +7,7 @@ Look at License for more detail.
 package cmd
 
 import (
-	"fmt"
+	"github.com/pkg/errors"
 	"github.com/qascade/yast/config"
 
 	"github.com/spf13/cobra"
@@ -23,7 +23,7 @@ var setupCmd = &cobra.Command{
 func CallSetup(cmd *cobra.Command, args []string) error {
 	err := config.SetupYast()
 	if err != nil {
-		return fmt.Errorf("err %s: could not setup yast", err)
+		return errors.Errorf("err %w: could not setup yast", err)
 	}
 	return nil
 }

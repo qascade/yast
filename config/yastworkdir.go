@@ -7,6 +7,7 @@ Look at License for more detail.
 package config
 
 import (
+	"fmt"
 	"os"
 )
 
@@ -15,10 +16,22 @@ var (
 	DefaultConfigPath string
 )
 
+type DirError struct {
+	err         error
+	YastWorkDir string
+}
+
+func (e *DirError) Error() string {
+	return fmt.Sprintf("err %s: could not create default yast work dir %s", e.err, e.YastWorkDir)
+}
+
 func CreateYastWorkDir() error {
 	err := os.MkdirAll(YastWorkDir, 0755)
 	if err != nil {
-		return err
+		return &DirError{
+			err:         err,
+			YastWorkDir: YastWorkDir,
+		}
 	}
 	return nil
 }

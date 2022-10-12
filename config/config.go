@@ -8,13 +8,23 @@ package config
 
 import (
 	"encoding/json"
-	"fmt"
+	"github.com/pkg/errors"
 	"io/ioutil"
 	"os"
 
 	"github.com/qascade/yast/scraper"
 	"github.com/qascade/yast/tui"
 	"github.com/qascade/yast/utils"
+)
+
+var (
+	CouldNotRemoveConfig     = "err %w: could not remove config.json"
+	CouldNotCreateConfig     = "err %w: could not create config.json"
+	CouldNotOpenConfig       = "err %w: could not open config.json"
+	CouldNotReadConfig       = "err %w: could not read config.json"
+	CouldNotUnmarshallConfig = "err %w: could not unmarshall config.json"
+	CouldNotRenderSetup      = "err %w: could not render setup model view"
+	ProblemWithPlayer        = "err %w: could not get player from existing config"
 )
 
 func FillConfigJSON(configFile *os.File, configBS *ConfigBuildSpec) error {
@@ -28,13 +38,13 @@ func UpdateConfigJSON(playerChange bool, targetChange bool, reset bool) error {
 	if reset {
 		err := RemoveConfigJSON()
 		if err != nil {
-			return fmt.Errorf("err %s: could not remove config.json", err)
+			return errors.Errorf(CouldNotRemoveConfig, err)
 		}
 		var configBS ConfigBuildSpec
 		var configFile *os.File
 		configFile, err = CreateConfigJSON()
 		if err != nil {
-			return fmt.Errorf("err %s: could not create config.json", err)
+			return errors.Errorf(CouldNotCreateConfig, err)
 		}
 		configBS, err = GetConfigBSFromSetupModel()
 		if err != nil {
@@ -59,19 +69,19 @@ func UpdateConfigJSON(playerChange bool, targetChange bool, reset bool) error {
 		if configBS.Player == "" {
 			configBS.Player, err = GetPlayerFromExistingConfig()
 			if err != nil {
-				err = fmt.Errorf("err %s: could not get player from existing config", err)
+				err = errors.Errorf(ProblemWithPlayer, err)
 				return err
 			}
 		} else {
 			err := RemoveConfigJSON()
 			ConfigJsonExists = false
 			if err != nil {
-				return fmt.Errorf("err %s: could not remove config.json", err)
+				return errors.Errorf(CouldNotRemoveConfig, err)
 			}
 
 			configFile, err = CreateConfigJSON()
 			if err != nil {
-				return fmt.Errorf("err %s: could not create config.json", err)
+				return errors.Errorf(CouldNotCreateConfig, err)
 			}
 		}
 		err = FillConfigJSON(configFile, &configBS)
@@ -92,7 +102,7 @@ func GetConfigBSFromSetupModel() (ConfigBuildSpec, error) {
 	utils.TraceMsg("TODO-Fill Config BS using tui-SetupModel")
 	err := tui.RenderSetupModelView()
 	if err != nil {
-		return configBS, fmt.Errorf("err %s: could not render setup model view", err)
+		return configBS, errors.Errorf(CouldNotRenderSetup, err)
 	}
 	PlayerChoiceFromTui = tui.GetPlayerChoice()
 	configBS.Player = PlayerChoiceFromTui
@@ -104,19 +114,19 @@ func GetConfigBSFromSetupModel() (ConfigBuildSpec, error) {
 func GetExistingTargetFromConfig() (string, error) {
 	configFile, err := os.Open(DefaultConfigPath)
 	if err != nil {
-		err = fmt.Errorf("err %s: could not open config.json", err)
+		err = errors.Errorf(CouldNotOpenConfig, err)
 		return "", err
 	}
 	var configBSJson []byte
 	configBSJson, err = ioutil.ReadAll(configFile)
 	if err != nil {
-		err = fmt.Errorf("err %s: could not read config.json", err)
+		err = errors.Errorf(CouldNotReadConfig, err)
 		return "", err
 	}
 	configBS := ConfigBuildSpec{}
 	err = json.Unmarshal(configBSJson, &configBS)
 	if err != nil {
-		err = fmt.Errorf("err %s: could not unmarshall config.json", err)
+		err = errors.Errorf(CouldNotUnmarshallConfig, err)
 		return "", err
 	}
 	return configBS.TargetPreference, nil
@@ -125,19 +135,19 @@ func GetExistingTargetFromConfig() (string, error) {
 func GetPlayerFromExistingConfig() (string, error) {
 	configFile, err := os.Open(DefaultConfigPath)
 	if err != nil {
-		err = fmt.Errorf("err %s: could not open config.json", err)
+		err = errors.Errorf(CouldNotOpenConfig, err)
 		return "", err
 	}
 	var configBSJson []byte
 	configBSJson, err = ioutil.ReadAll(configFile)
 	if err != nil {
-		err = fmt.Errorf("err %s: could not read config.json", err)
+		err = errors.Errorf(CouldNotReadConfig, err)
 		return "", err
 	}
 	configBS := ConfigBuildSpec{}
 	err = json.Unmarshal(configBSJson, &configBS)
 	if err != nil {
-		err = fmt.Errorf("err %s: could not unmarshall config.json", err)
+		err = errors.Errorf(CouldNotUnmarshallConfig, err)
 		return "", err
 	}
 	return configBS.Player, nil

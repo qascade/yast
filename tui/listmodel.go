@@ -7,8 +7,7 @@ Look at License for more detail.
 package tui
 
 import (
-	"fmt"
-
+	"github.com/pkg/errors"
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
@@ -171,7 +170,7 @@ func (m ListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 //Also need to pass Results struct here for rendering.
 func RenderListModelView(title string, results scraper.Results) (err error) {
 	if err := tea.NewProgram(NewListModel(title, results)).Start(); err != nil {
-		err = fmt.Errorf("error: not able to render list model")
+		err = errors.Errorf("error: not able to render list model")
 		return err
 	}
 	return nil

@@ -7,7 +7,7 @@ Look at License for more detail.
 package cmd
 
 import (
-	"fmt"
+	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 
 	"github.com/qascade/yast/config"
@@ -40,7 +40,7 @@ func CallUpdateConfig(cmd *cobra.Command, args []string) error {
 	playerChangeFlagSet, targetChangeFlagSet, resetFlagSet := CheckIfConfigFlagSet(cmd)
 	err = config.UpdateConfigJSON(playerChangeFlagSet, targetChangeFlagSet, resetFlagSet)
 	if err != nil {
-		return fmt.Errorf("err %s: could not update config", err)
+		return errors.Errorf("err %w: could not update config", err)
 	}
 	return err
 }

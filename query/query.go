@@ -7,7 +7,7 @@ Look at License for more detail.
 package core
 
 import (
-	"fmt"
+	"github.com/pkg/errors"
 	"github.com/qascade/yast/scraper"
 )
 
@@ -44,7 +44,7 @@ func (q *SearchQuery) Search() (results []scraper.Result, err error) {
 // To be used when implementing Query History
 func (q *SearchQuery) GetResults() (results []scraper.Result, err error) {
 	if !q.searched {
-		err = fmt.Errorf("Query has not been searched yet")
+		err = errors.Errorf("Query has not been searched yet")
 		return
 	}
 	return q.Results, nil

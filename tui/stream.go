@@ -11,6 +11,8 @@ package tui
 import (
 	"fmt"
 	"os/exec"
+
+	"github.com/pkg/errors"
 )
 
 //Need to implement getMagnet from Function Model.
@@ -32,7 +34,7 @@ func StartStream() error {
 	cmdStr := "webtorrent"
 	cmd := exec.Command(cmdStr, chosenMagnet, "--vlc")
 	if err := cmd.Run(); err != nil {
-		return fmt.Errorf("error starting stream: %v", err)
+		return errors.Errorf("error starting stream: %v", err)
 	}
 	return nil
 }

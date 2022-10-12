@@ -9,6 +9,7 @@ package tui
 import (
 	"fmt"
 
+	"github.com/pkg/errors"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/muesli/reflow/indent"
 	"github.com/muesli/termenv"
@@ -135,7 +136,7 @@ func updateChosen(m SetupModel) tea.Model {
 func RenderSetupModelView() error {
 	setupModel := SetupModel{}
 	if err := tea.NewProgram(setupModel).Start(); err != nil {
-		err = fmt.Errorf("error: not able to render setup model")
+		err = errors.Errorf("error: not able to render setup model")
 		return err
 	}
 	return nil
