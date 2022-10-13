@@ -71,6 +71,7 @@ Use "yast [command] --help" for more information about a command.
 ## 📝 NOTE
 1. The current supported target requires VPN to get results. Please make sure that you are connected to a **VPN Server** before searching or you may not get the results. We personally recommend using CloudFlare Warp. You can [download](https://1.1.1.1/) it here.
 2. The Project is still in development stage. So, you might see undesired behaviour while using yast. Please file an issue if you experience any bugs or undesired behaviour. 
+3. Currently `wsl2` does not support yast, because `yast` works on targets that can be accessed by a VPN only and `wsl2` does not have VPN support yet.
 
 
 ## 🤝 Contribution
