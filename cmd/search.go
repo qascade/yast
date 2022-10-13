@@ -35,7 +35,7 @@ var (
 	seriesSet  bool
 
 	ErrNoSelectionWhatToWatch = errors.New("you must specify either a movie or a series to search for")
-	ErrBothSelectedToWatch = errors.New("you can only search for either movie or series at a time")
+	ErrBothSelectedToWatch    = errors.New("you can only search for either movie or series at a time")
 )
 
 // For now we will only search for either movie or series one at a time. If both flags set throw error

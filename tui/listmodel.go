@@ -7,11 +7,11 @@ Look at License for more detail.
 package tui
 
 import (
-	"github.com/pkg/errors"
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/list"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/pkg/errors"
 
 	"github.com/qascade/yast/movie"
 	"github.com/qascade/yast/scraper"
@@ -71,7 +71,7 @@ type ListModel struct {
 	delegateKeys *delegateKeyMap
 }
 
-//title argument will be used later once tv-series is implemented.
+// title argument will be used later once tv-series is implemented.
 func NewListModel(title string, results scraper.Results) ListModel {
 	var (
 		delegateKeys = newDelegateKeyMap()
@@ -166,8 +166,8 @@ func (m ListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, tea.Batch(cmds...)
 }
 
-//This method is used to render ListModel View once query results are aquired by the scrper.
-//Also need to pass Results struct here for rendering.
+// This method is used to render ListModel View once query results are aquired by the scrper.
+// Also need to pass Results struct here for rendering.
 func RenderListModelView(title string, results scraper.Results) (err error) {
 	if err := tea.NewProgram(NewListModel(title, results)).Start(); err != nil {
 		err = errors.Errorf("error: not able to render list model")
