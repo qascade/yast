@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"sync"
 
+	"github.com/pkg/errors"
 	"github.com/qascade/yast/config"
 	"github.com/qascade/yast/query"
 	"github.com/qascade/yast/scraper"
@@ -32,6 +33,9 @@ var (
 	SeriesName string
 	movieSet   bool
 	seriesSet  bool
+
+	ErrNoSelectionWhatToWatch = errors.New("you must specify either a movie or a series to search for")
+	ErrBothSelectedToWatch    = errors.New("you can only search for either movie or series at a time")
 )
 
 // For now we will only search for either movie or series one at a time. If both flags set throw error
@@ -48,7 +52,7 @@ func CheckIfSearchFlagsSet(cmd *cobra.Command, args []string) (movieSet, seriesS
 		bothSet = true
 	}
 	if !movieSet && !seriesSet {
-		err = fmt.Errorf("you must specify either a movie or a series to search for")
+		err = ErrNoSelectionWhatToWatch
 	}
 	return
 }
@@ -60,8 +64,7 @@ func Search(cmd *cobra.Command, args []string) error {
 		return err
 	}
 	if bothSet {
-		err = fmt.Errorf("you can only search for either movie or series at a time")
-		return err
+		return ErrBothSelectedToWatch
 	}
 	if movieSet {
 		MovieName = cmd.Flag("movie").Value.String()
