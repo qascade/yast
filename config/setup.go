@@ -8,9 +8,8 @@ package config
 
 import (
 	"fmt"
-	"os"
-
 	"github.com/qascade/yast/scraper"
+	"os"
 )
 
 func SetupYast() error {
@@ -18,20 +17,26 @@ func SetupYast() error {
 	if err != nil {
 		return fmt.Errorf("err %s: could not create default yast work dir %s", err, YastWorkDir)
 	}
-	var configFile *os.File
-	configFile, err = CreateConfigJSON()
-	if err != nil {
-		return fmt.Errorf("err %s: could not create config.json", err)
-	}
 	var configBS ConfigBuildSpec
 	configBS, err = GetConfigBSFromSetupModel()
 	if err != nil {
 		return fmt.Errorf("err %s: could not get config build spec from setup model", err)
 	}
+	if configBS.Player == "" {
+		existingPlayer, err := GetPlayerFromExistingConfig()
+		if err != nil || existingPlayer == "" {
+			os.Remove(DefaultConfigPath)
+			return nil
+		}
+		configBS.Player = existingPlayer
+	}
 	//Putting default targetPreference as 1337x.to
 	configBS.TargetPreference = scraper.TARGET_1337X
+	configFile, err := CreateConfigJSON()
+	if err != nil {
+		return fmt.Errorf("err %s: could not create config.json", err)
+	}
 
 	FillConfigJSON(configFile, &configBS)
 	return nil
-
 }
