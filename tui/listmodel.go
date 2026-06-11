@@ -23,6 +23,16 @@ const (
 	//SERIES_RESULTS_TITLE = "Series Results"
 )
 
+var qualityLabels = map[string]string{
+	"":        "All",
+	"4K":      "4K",
+	"1080p":   "1080p",
+	"720p":    "720p",
+	"480p":    "480p",
+	"360p":    "360p",
+	"Unknown": "Unknown",
+}
+
 var (
 	appStyle = lipgloss.NewStyle().Padding(1, 2)
 
@@ -42,6 +52,12 @@ type listKeyMap struct {
 	toggleStatusBar  key.Binding
 	togglePagination key.Binding
 	toggleHelpMenu   key.Binding
+	filter1080p      key.Binding
+	filter720p       key.Binding
+	filter4K         key.Binding
+	filterAll        key.Binding
+	clearFilter      key.Binding
+	sortBySeeds      key.Binding
 }
 
 func newListKeyMap() *listKeyMap {
@@ -62,14 +78,40 @@ func newListKeyMap() *listKeyMap {
 			key.WithKeys("H"),
 			key.WithHelp("H", "toggle help"),
 		),
+		filter1080p: key.NewBinding(
+			key.WithKeys("1"),
+			key.WithHelp("1", "filter 1080p"),
+		),
+		filter720p: key.NewBinding(
+			key.WithKeys("2"),
+			key.WithHelp("2", "filter 720p"),
+		),
+		filter4K: key.NewBinding(
+			key.WithKeys("3"),
+			key.WithHelp("3", "filter 4K"),
+		),
+		filterAll: key.NewBinding(
+			key.WithKeys("0"),
+			key.WithHelp("0", "show all"),
+		),
+		clearFilter: key.NewBinding(
+			key.WithKeys("esc"),
+			key.WithHelp("esc", "clear filters"),
+		),
+		sortBySeeds: key.NewBinding(
+			key.WithKeys("s"),
+			key.WithHelp("s", "sort by seeds"),
+		),
 	}
 }
 
 type ListModel struct {
-	list         list.Model
-	items        []list.Item
-	keys         *listKeyMap
-	delegateKeys *delegateKeyMap
+	list          list.Model
+	items         []list.Item
+	keys          *listKeyMap
+	delegateKeys  *delegateKeyMap
+	qualityFilter string
+	sortBySeeds   bool
 }
 
 //title argument will be used later once tv-series is implemented.
@@ -98,15 +140,22 @@ func NewListModel(title string, results scraper.Results) ListModel {
 			listKeys.toggleStatusBar,
 			listKeys.togglePagination,
 			listKeys.toggleHelpMenu,
-			//listKeys.insertItem,
+			listKeys.filter1080p,
+			listKeys.filter720p,
+			listKeys.filter4K,
+			listKeys.filterAll,
+			listKeys.sortBySeeds,
+			listKeys.clearFilter,
 		}
 	}
 
 	return ListModel{
-		list:         queryItemList,
-		keys:         listKeys,
-		items:        items,
-		delegateKeys: delegateKeys,
+		list:          queryItemList,
+		keys:          listKeys,
+		items:         items,
+		delegateKeys:  delegateKeys,
+		qualityFilter: "",
+		sortBySeeds:   false,
 	}
 
 }
@@ -157,6 +206,49 @@ func (m ListModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case key.Matches(msg, m.keys.toggleHelpMenu):
 			m.list.SetShowHelp(!m.list.ShowHelp())
 			return m, nil
+
+		case key.Matches(msg, m.keys.filter1080p):
+			m.qualityFilter = "1080p"
+			m.applyFilter()
+			m.list.SetShowStatusBar(true)
+			return m, m.list.NewStatusMessage(statusMessageStyle(m.filterStatus()))
+
+		case key.Matches(msg, m.keys.filter720p):
+			m.qualityFilter = "720p"
+			m.applyFilter()
+			m.list.SetShowStatusBar(true)
+			return m, m.list.NewStatusMessage(statusMessageStyle(m.filterStatus()))
+
+		case key.Matches(msg, m.keys.filter4K):
+			m.qualityFilter = "4K"
+			m.applyFilter()
+			m.list.SetShowStatusBar(true)
+			return m, m.list.NewStatusMessage(statusMessageStyle(m.filterStatus()))
+
+		case key.Matches(msg, m.keys.filterAll):
+			m.qualityFilter = ""
+			m.applyFilter()
+			m.list.SetShowStatusBar(true)
+			return m, m.list.NewStatusMessage(statusMessageStyle(m.filterStatus()))
+
+		case key.Matches(msg, m.keys.sortBySeeds):
+			m.sortBySeeds = !m.sortBySeeds
+			m.applyFilter()
+			m.list.SetShowStatusBar(true)
+			statusMsg := "Sort: default"
+			if m.sortBySeeds {
+				statusMsg = "Sort: Seeds ↓"
+			}
+			return m, m.list.NewStatusMessage(statusMessageStyle(statusMsg))
+
+		case key.Matches(msg, m.keys.clearFilter):
+			if m.list.FilterState() == list.FilterApplied || m.qualityFilter != "" || m.sortBySeeds {
+				m.list.ResetFilter()
+				m.qualityFilter = ""
+				m.sortBySeeds = false
+				m.list.SetItems(m.items)
+				return m, m.list.NewStatusMessage(statusMessageStyle("Filter cleared"))
+			}
 		}
 	}
 
@@ -175,6 +267,70 @@ func RenderListModelView(title string, results scraper.Results) (err error) {
 		return err
 	}
 	return nil
+}
+
+// applyFilter recomputes the displayed item list based on the current quality filter
+// and sort settings, then updates the underlying list.Model.
+func (m *ListModel) applyFilter() {
+	filtered := make([]list.Item, 0, len(m.items))
+	for _, item := range m.items {
+		mv, ok := item.(movie.Movie)
+		if !ok {
+			filtered = append(filtered, item)
+			continue
+		}
+		if m.qualityFilter == "" || mv.Quality == m.qualityFilter {
+			filtered = append(filtered, item)
+		}
+	}
+	if m.sortBySeeds {
+		m.sortItemsBySeeds(filtered)
+	}
+	m.list.SetItems(filtered)
+}
+
+// sortItemsBySeeds sorts items in-place by seed count (descending).
+func (m *ListModel) sortItemsBySeeds(items []list.Item) {
+	for i := 0; i < len(items); i++ {
+		for j := i + 1; j < len(items); j++ {
+			si, oki := items[i].(movie.Movie)
+			sj, okj := items[j].(movie.Movie)
+			if !oki || !okj {
+				continue
+			}
+			seedI := parseSeedCount(si.Seeds)
+			seedJ := parseSeedCount(sj.Seeds)
+			if seedJ > seedI {
+				items[i], items[j] = items[j], items[i]
+			}
+		}
+	}
+}
+
+// parseSeedCount converts a seed string (e.g. "4521") to an int.
+func parseSeedCount(s string) int {
+	n := 0
+	for _, c := range s {
+		if c >= '0' && c <= '9' {
+			n = n*10 + int(c-'0')
+		} else {
+			break
+		}
+	}
+	return n
+}
+
+// filterStatus returns a human-readable status line showing active filters.
+func (m *ListModel) filterStatus() string {
+	label := qualityLabels[m.qualityFilter]
+	if label == "" {
+		label = "All"
+	}
+	status := "Filter: " + label
+	if m.sortBySeeds {
+		status += " | Sort: Seeds ↓"
+	}
+	return status
 }
 
 //--------------Deletegate Key Map-------------------//

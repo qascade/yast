@@ -64,12 +64,33 @@ func (s *Scraper) scrape1337x(context *QueryContext) ([]Result, error) {
 
 // movieFromString returns a type Movie
 func movieFromString(document *goquery.Selection) movie.Movie {
+	name := document.Find("td.name > a:nth-child(2)").Text()
 	return movie.Movie{
-		Name:     document.Find("td.name > a:nth-child(2)").Text(),
+		Name:     name,
 		Uploaded: document.Find("td.coll-date").Text(),
 		Size:     formatSize1337x(strings.Replace(document.Find("td.size").Text(), document.Find("td.seeds").Text(), "", -1)),
 		Seeds:    document.Find("td.seeds").Text(),
 		Uploader: document.Find("td.coll-5").Text(),
+		Quality:  extractQuality(name),
+	}
+}
+
+// extractQuality parses video resolution from the torrent name.
+func extractQuality(name string) string {
+	lower := strings.ToLower(name)
+	switch {
+	case strings.Contains(lower, "2160p") || strings.Contains(lower, "4k"):
+		return "4K"
+	case strings.Contains(lower, "1080p") || strings.Contains(lower, "fhd"):
+		return "1080p"
+	case strings.Contains(lower, "720p") || strings.Contains(lower, "hd"):
+		return "720p"
+	case strings.Contains(lower, "480p"):
+		return "480p"
+	case strings.Contains(lower, "360p"):
+		return "360p"
+	default:
+		return "Unknown"
 	}
 }
 
